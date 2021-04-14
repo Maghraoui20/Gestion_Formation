@@ -227,24 +227,20 @@ export const  signupcentre = async (req, res) => {
   };
   export const getTrainingcenter = async (req,res) => {
     try {
-     
-   let ids = "";
-      const trainingdids = await Center.find({}, {trainingcenter : 1} );
-      trainingdids.map((e)=>{
-        ids=(e.trainingcenter);
-      });
-      console.log("ids",ids);
-      const page = parseInt(req.query.page || "1");
-  
+      const  idf  = req.query.id;
+      console.log(idf)
+   const page = parseInt(req.query.page || "1");
+
       console.log("page numéro", req.query.page);
       const PAGE_SIZE = 3;
-        const Trainingcenter= await Training.find({_id :{$in: ids}}).limit(PAGE_SIZE).skip(PAGE_SIZE* (page - 1));
-  console.log(("trainingcenter", Trainingcenter));
-      res.status(200).json({
-        Trainingcenter,
-       
-      });
+      const Trainings = await Training.find({id_center:idf}).limit(PAGE_SIZE).skip(PAGE_SIZE* (page - 1));
+       console.log("trainings",Trainings);
+      res.status(200).json(
+        Trainings
+             );
     } catch (error) {
       res.status(404).json({ message: error.message });
+
     };
+  
   };

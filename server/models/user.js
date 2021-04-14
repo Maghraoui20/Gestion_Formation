@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema ({
   city : {type: String, required:true, trim: true },
   gouvernorate : {type: String, required:true, trim: true },
   email :{ type:String, required:true , unique:true},
-  image: String,
+  selectedimage: String,
   idcity:{type: mongoose.Schema.ObjectId, ref : 'cities'},
     idgouvernorate:{type: mongoose.Schema.ObjectId, ref : 'gouvernorat'},
   password : {

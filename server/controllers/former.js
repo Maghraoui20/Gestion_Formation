@@ -4,8 +4,7 @@ import Former from "../models/former.js";
 import Centre from "../models/centre.js";
 import User from '../models/user.js';
 import Categorie from "../models/categorie.js";
-
-
+import Training from '../models/training.js';
 export const getFormer = async (req, res) => {
   try {
     console.log("params", req.query.InputSearch);
@@ -252,5 +251,26 @@ export const  signupformer = async (req, res) => {
       });
     } catch (error) {
       res.status(404).json({ message: error.message });
+    };
+  };
+
+
+  
+  export const getTrainingFormer = async (req,res) => {
+    try {
+      const  idf  = req.query.id;
+      console.log(idf)
+   const page = parseInt(req.query.page || "1");
+
+      console.log("page numéro", req.query.page);
+      const PAGE_SIZE = 3;
+      const Trainings = await Training.find({id_former:idf}).limit(PAGE_SIZE).skip(PAGE_SIZE* (page - 1));
+       console.log("trainings",Trainings);
+      res.status(200).json(
+        Trainings
+             );
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+
     };
   };
