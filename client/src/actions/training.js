@@ -43,35 +43,42 @@ try {
 }
 };
 
-export const creatTraining = (formation) => async (dispatch) => {
+export const creatTraining = (formation,id) => async (dispatch) => {
   try {
-      const {data} = await api.creatTraining(formation);
+      const {data} = await api.creatTraining(formation,id);
       dispatch({ type:'CREATE', payload: data})
   }catch (error){
       console.log(error);
-
+  }
+};
+export const creatTrainingcenter = (formation,id) => async (dispatch) => {
+  try {
+      const {data} = await api.creatTrainingcenter(formation,id);
+      dispatch({ type:'CREATE', payload: data})
+  }catch (error){
+      console.log(error);
   }
 };
 
+
 export const updateTraining = (id, formation) => async (dispatch) => {
-try {
- const { data } = await api.updateTraining(id, formation);
-
- dispatch({ type: 'UPDATE' , payload: data });
-} catch (error) {
- console.log(error);
-}
-};
-
-export const deleteTraining = (id) => async (dispatch) => {
-try {
-  await api.deleteTraining(id);
- dispatch({ type:'DELETE', payload: id });
-
-} catch (error) {
- console.log(error);
-}
-};
+  try {
+   const { data } = await api.updateTraining(id, formation);
+  
+   dispatch({ type: 'UPDATEf' , payload: data });
+  } catch (error) {
+   console.log(error);
+  }
+  };
+  
+  export const deleteTraining = (id) => async (dispatch) => {
+  try {
+    await api.deleteTraining(id);
+   dispatch({ type:'DELETE', payload: id });
+  } catch (error) {
+   console.log(error);
+  }
+  };
 export const getrecentTraining  =(page) => async (dispatch) => {
 
 try {
@@ -123,3 +130,14 @@ export const getnameFormer =() => async (dispatch)=> {
     
   }
 }; 
+export const getTrainingbyid = (id) => async (dispatch) =>{
+
+  try {
+    const {data} =  await api.fetchTrainingbyid(id);
+  dispatch ({ type: 'FETCH_ALL', payload: data }) ;
+  return data;
+} catch (error) {
+ console.log('error action',error.message);
+
+  }
+}

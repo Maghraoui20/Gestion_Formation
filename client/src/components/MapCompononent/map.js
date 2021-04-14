@@ -70,7 +70,9 @@ const MapComponent = ({FilteredTraining , gouvernorat, city}) => {
         click: () => {
           map.setView([formation.latitude, formation.longitude], 19);
         },
-      }} 
+      }
+    } 
+    key={formation._id}
       position={[formation.latitude, formation.longitude]}
       
      icon={ myIcon}

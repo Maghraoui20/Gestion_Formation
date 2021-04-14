@@ -34,8 +34,8 @@ const [idstraining, setIdstraining] = useState([]);
          
    
     });
-   dispatch(getTrainingcenter(pageNumber)).then((res)=> {
-      setIdstraining(res.Trainingcenter);
+   dispatch(getTrainingcenter(idcenter,pageNumber)).then((res)=> {
+      setIdstraining(res);
       setPageNumber(pageNumber + 1);
     })
   }, [dispatch]);
@@ -45,14 +45,14 @@ const [idstraining, setIdstraining] = useState([]);
   
     dispatch(
       getTrainingcenter(
-        pageNumber )).then((res) => {
-            if(res.Trainingcenter.length === 0)
+       idcenter, pageNumber )).then((res) => {
+            if(res.length === 0)
             {
               setIdstraining(idstraining);
                 setShownext(false);
             }
             else{
-              setIdstraining(res.Trainingcenter);
+              setIdstraining(res);
 
             }
    
@@ -62,13 +62,13 @@ const [idstraining, setIdstraining] = useState([]);
   
     dispatch(
       getTrainingcenter(
-        pageBack)).then((res) => {
+        idcenter,pageBack)).then((res) => {
             if(pageBack===0) {
               setIdstraining(idstraining);
                 setShowBack(false);
             }
             else {
-              setIdstraining(res.Trainingcenter);
+              setIdstraining(res);
 
             }
     });

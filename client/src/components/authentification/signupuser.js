@@ -51,9 +51,7 @@ const Signup = () => {
 
     val === null ? setsignData({ ...signData, gouvernorate: null }) :
    
-      setsignData({ ...signData,  gouvernorate: nom , idgouvernorate: val._id })
-    
-
+      setsignData({ ...signData,  gouvernorate: nom, idgouvernorate: val._id })
     val === null ? setfiltredCity([]) :
       setfiltredCity(City.filter((x) => x.id_gouvernorat === val._id));
   };
@@ -64,9 +62,7 @@ const Signup = () => {
     e.preventDefault();
     val === null ? setsignData({ ...signData,  city: null }) :
 
-      setsignData({ ...signData, city: nom  , idcity: val._id });
-
-
+      setsignData({ ...signData, city: nom , idcity: val._id });
 
   };
 

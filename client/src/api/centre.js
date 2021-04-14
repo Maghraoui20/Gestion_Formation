@@ -6,7 +6,7 @@ const url3 = 'http://localhost:5010/paging/pageshowcentre';
 const url4 = 'http://localhost:5010/paging/recentcentre';
 
 const url5 = 'http://localhost:5010/centre/one';
-const url6 ='http://localhost:5010/paging/trainingcenter';
+const url6 ='http://localhost:5010/centre/training';
 
 export const fetchSearchedCentres = (InputSearch) => {
   return axios.get(url, {
@@ -40,9 +40,9 @@ export const fetchrecentCentre =(page)=> {
 export const fetchOneCenter = (idcenter) => {
   return axios.get(url5,{params:{idcenter}})
 };
-export const fetchTrainingcenter = (page) => {
+export const fetchTrainingcenter = (id,page) => {
   return axios.get(url6, {
-    params: { page}
+    params: {id, page}
   })
 };
 

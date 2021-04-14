@@ -9,6 +9,12 @@ import EmailIcon from '@material-ui/icons/Email';
 import WcIcon from '@material-ui/icons/Wc';
 import PhoneIcon from '@material-ui/icons/Phone';
 import {ReactComponent as Graduate} from "../Pictures/graduate.svg";
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import  {getTrainingFormer} from "../../actions/former";
+import Cards from "../Training/cards";
+
+
 
 const DetailsFormer = () => {
     const dispatch = useDispatch();
@@ -18,6 +24,11 @@ const DetailsFormer = () => {
 const idformer = url.substr(32);
 console.log('former');
 const [viewPdf, setViewPdf]=useState(null);
+const [idstraining, setIdstraining] = useState([]);
+const [pageNumber, setPageNumber] = useState(1);
+const [pageBack, setPageBack] = useState(1);
+const [showBack , setShowBack] = useState(true);
+const [shownext, setShownext]= useState(true);
 
 useEffect(() => {
     
@@ -32,8 +43,69 @@ useEffect(() => {
         }
     });
 
+
+    dispatch(getTrainingFormer(idformer,pageNumber)).then((res)=> {
+        setIdstraining(res);
+        setPageNumber(pageNumber + 1);
+      })
+
+
   }, [dispatch]);
- 
+  const handleTraining = () => {    
+  
+    dispatch(
+      getTrainingFormer(
+       idformer, pageNumber )).then((res) => {
+            if(res.length === 0)
+            {
+              setIdstraining(idstraining);
+                setShownext(false);
+            }
+            else{
+              setIdstraining(res);
+
+            }
+   
+    });
+  };
+  const handleTrainingBack = () => {    
+  
+    dispatch(
+      getTrainingFormer(
+       idformer, pageBack)).then((res) => {
+            if(pageBack===0) {
+              setIdstraining(idstraining);
+                setShowBack(false);
+            }
+            else {
+              setIdstraining(res);
+
+            }
+    });
+  };
+  const showMore = (page) => {
+    handleTraining();
+    console.log(pageNumber);
+};
+
+const showMorebtn = () => {
+ showMore(pageNumber);
+ setPageBack(pageNumber - 1);
+setPageNumber(pageNumber + 1);
+
+
+};
+
+const showBackbtn = (page) => {
+
+   handleTrainingBack();
+}
+const showbackbutton =() => {
+console.log("back", pageBack);
+   showBackbtn(pageBack);
+setPageBack(pageBack - 1)
+
+}
 
 
 
@@ -95,6 +167,12 @@ return (
 }
         
        </Paper>
+       <div className={classes.div1}>
+               <h2 className={classes.presenté}> Les formations présentées par</h2>
+                 {OneFormer.map((e) => 
+                <h2 className={classes.namecenter}>{e.firstname} {e.lastname}</h2>
+                 )}
+               </div>
        </Grid>
 
 
@@ -112,9 +190,41 @@ return (
         </Grid>
 
 
+        <div className={classes.cards}>
+             <Grid container item lg={12}  spacing={2} >
+            
+               
+  {
+    !idstraining ? null : idstraining.map((Training) =>
+    (
 
+       <Grid
+       container
+  
+                  item
+                  xs={12}
+                  md={4}
+                  sm={6}
+                  lg={4}
+                  key={Training._id}
+                
+                >
+                  <Cards Training={Training} />
+                </Grid>
+    ))
+  }
+</Grid>
+             </div>
 
-
+             {     showBack ? <Button className={classes.voirback} onClick={showbackbutton} ><ArrowBackIosIcon  className={classes.back}/></Button>
+: null
+}
+     
+     { shownext ?
+      <Button className={classes.voirplus}  onClick={showMorebtn}>
+        < NavigateNextIcon  className={classes.next} />
+        </Button>: null
+     } 
 
 
 

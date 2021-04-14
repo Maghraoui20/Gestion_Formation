@@ -22,6 +22,10 @@ import Centre from './pages/centre';
 import Former from './pages/former';
 import Cv from "./components/Cv/cv";
 import Formation from "./pages/training";
+
+import Mytrainings from './components/Profils/mytraining';
+import UpdateTraining from './components/Form/updateForm';
+
 const App = () => {
     const [currentId, setCurrentId] = useState(null);
     const dispatch = useDispatch();
@@ -43,7 +47,7 @@ const App = () => {
                 <>
                 <Navbar /> 
                 <Route path="/" exact component={Search} />
-                <Route path="/formations">  <Formation /> </Route>
+                <Route path="/formations">  {/* <Formation /> */}  <Form/>   </Route>
                 <Route path="/formateurs"> <Former/>  {/* <Form/>   */}   </Route>
                 <Route path="/centredeformation">  <Centre/> </Route>
                 <PrivateRoute path="/myaccount" component={Account}></PrivateRoute>
@@ -51,6 +55,14 @@ const App = () => {
                  <Route path="/formation/:id">  <Details/></Route>  
                  <Route path="/centre/:id"> <DetailsCentre/> </Route>
                  <Route path="/formateur/:id"> <DetailsFormer/> </Route>
+
+
+                <PrivateRoute path="/mesformations" component={Mytrainings}></PrivateRoute>
+                <PrivateRoute path="/trainingupdate/:id" component={UpdateTraining}></PrivateRoute>
+              
+
+
+
                 <Footer />
                 </>
                 
