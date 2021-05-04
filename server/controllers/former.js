@@ -5,9 +5,10 @@ import Centre from "../models/centre.js";
 import User from '../models/user.js';
 import Categorie from "../models/categorie.js";
 import Training from '../models/training.js';
+
 export const getFormer = async (req, res) => {
   try {
-    console.log("params", req.query.InputSearch);
+    //console.log("params", req.query.InputSearch);
     const wordsearched = req.query.InputSearch.replace(/\s\s+/g, " ");
 
     const formers = await Former.aggregate([
@@ -58,7 +59,6 @@ export const getFormer = async (req, res) => {
       },
     ]);
 
-    console.log("Formers", formers);
     res.status(200).json(formers);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -105,6 +105,15 @@ export const  signupformer = async (req, res) => {
          email, 
          password: hashedpassword,});
       const token = jwt.sign({email: result.email, id: result._id}, 'test', {expiresIn:"1d"});
+
+      let tabCateg = [];
+      const spe=  await Categorie.find({_id:{$in : idspeciality}});
+      spe.map(async(el)=> {
+       tabCateg.push(el._id);
+       } )
+       await Categorie.updateMany({_id : {$in : tabCateg }}, {$push:{ idsformer : result._id}})
+
+
       res.status(200).json({result, token});
    }
    catch (error) {
@@ -115,22 +124,18 @@ export const  signupformer = async (req, res) => {
   export const getAllFormers = async (req, res) => {
     try {
       const page = parseInt(req.query.page || "1");
-      console.log("page numéro", req.query.page);
   
       const PAGE_SIZE = 3;
       const minAge = req.query.age[0];
       const maxAge = req.query.age[1];
-      console.log(minAge, maxAge);
+      console.log(minAge);
+      console.log(maxAge);
       const inputsearched = req.query.InputSearch.replace(/\s\s+/g, " ");
-      console.log(inputsearched);
       let idsspecialitys = [];
-      //console.log("before if ");
       if (req.query.SpecialityIds && req.query.SpecialityIds.length > 0) {
-        console.log("in if ", req.query.SpecialityIds);
   
         idsspecialitys = req.query.SpecialityIds;
       } else {
-        //console.log("in else ");
   
         const specialty = await Categorie.find({}, { _id: 1 });
   
@@ -142,34 +147,29 @@ export const  signupformer = async (req, res) => {
         //console.log(idscategories);
       }
       //console.log("after if ");
-  
-  
-     
+      
   let selectsexe = [];
   if(req.query.sexe && req.query.sexe.length>0) {
     selectsexe=req.query.sexe;
   }
   else {
-    selectsexe.push("Femme, Homme");
+    selectsexe.push("Femme");
+    selectsexe.push("Homme")
   }
   console.log(selectsexe);
       const AllFormer = await Former.find({
         $and: [
-          {idspeciality: { $in: idsspecialitys } },
   
-          
-    
-        //{Numbreofexperience:{ $gte: minAge, $lte: maxAge } },
-        //{sexe:selectsexe},
-        //{firstname:{$regex : inputsearched}},
-        //{lastname:{$regex : inputsearched}},
+        {idspeciality : { $in : idsspecialitys}},
+        {Numbreofexperience : { $gte: minAge, $lte: maxAge } },
+       {gender: {$in: selectsexe}},
+        {firstname:{$regex : inputsearched}},
+        {lastname:{$regex : inputsearched}}, 
   
         ],
       }).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
-      console.log("houni1");
       const total = await Former.countDocuments();
-      // console.log("total", total);
-      console.log("AllFormer", AllFormer);
+      console.log("former", AllFormer);
       //let totalPages = Math.ceil(total / PAGE_SIZE);
       //console.log("totalpages", totalPages);
       res.status(200).json({
@@ -187,7 +187,6 @@ export const  signupformer = async (req, res) => {
   export const getnotshowformer = async (req, res) => {
     try {
       const page = parseInt(req.query.page || "1");
-      console.log("page numéro", req.query.page);
   
       const PAGE_SIZE = 3;
      
@@ -196,7 +195,6 @@ export const  signupformer = async (req, res) => {
       const AllFormer = await Former.find({}
       ).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
   
-      console.log("filter masqué");
       const total = await Former.countDocuments();
     
       //console.log("AllFormer", AllFormer);
@@ -213,7 +211,6 @@ export const  signupformer = async (req, res) => {
   export const getrecentFormer = async (req, res) => {
     try {
       const page = parseInt(req.query.page || "1");
-      console.log("page numéro", req.query.page);
   
       const PAGE_SIZE = 3;
       
@@ -221,7 +218,6 @@ export const  signupformer = async (req, res) => {
   
       const total = await Former.countDocuments();
       // console.log("total", total);
-      console.log("AllFormer", AllFormer);
       //let totalPages = Math.ceil(total / PAGE_SIZE);
       //console.log("totalpages", totalPages);
       res.status(200).json({
@@ -239,11 +235,9 @@ export const  signupformer = async (req, res) => {
       
       const  ids  = req.query.idformer;
     
-      console.log(ids);
       const OneFormer = await Former.find({_id:ids});
   
      
-      console.log("OneFormer", OneFormer);
      
       res.status(200).json({
         OneFormer,
@@ -259,13 +253,10 @@ export const  signupformer = async (req, res) => {
   export const getTrainingFormer = async (req,res) => {
     try {
       const  idf  = req.query.id;
-      console.log(idf)
    const page = parseInt(req.query.page || "1");
 
-      console.log("page numéro", req.query.page);
       const PAGE_SIZE = 3;
       const Trainings = await Training.find({id_former:idf}).limit(PAGE_SIZE).skip(PAGE_SIZE* (page - 1));
-       console.log("trainings",Trainings);
       res.status(200).json(
         Trainings
              );
@@ -273,4 +264,62 @@ export const  signupformer = async (req, res) => {
       res.status(404).json({ message: error.message });
 
     };
+  };
+  export const getFormers = async (req,res) => {
+    try {
+     
+      const formers = await Former.find();
+     
+      res.status(200).json(
+        formers
+             );
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+
+    };
+  };
+  export const deleteFormer = async (req, res) => {
+    try {
+    const  id  = req.query.id;
+    const former = await Former.find({_id: {$in: id}});
+former.map(async(el)=>{
+  await Former.findByIdAndRemove(el._id);
+  const training = await Training.find({id_center: id});
+  training.map(async(e)=>
+{   
+ await Training.findByIdAndRemove(e._id);
+ await Categorie.findByIdAndRemove(e._id);
+
+}
+  )
+})
+   
+  
+
+    res.json({ message: "le formateur a ete supprimer avec succés !" });
+    }catch (error) {
+      res.status(404).json({ message: error.message });
+      console.log(error.message)
+    }
+  };
+
+
+  export const getSearched = async (req, res) => {
+    try {
+      console.log(req.query.InputSearch);
+      const wordsearched = req.query.InputSearch.toLowerCase().replace(
+        /\s\s+/g,
+        " "
+      );
+     
+  
+      const formers = await Former.find( {$or:[{firstname:{$regex: wordsearched}},
+        {lastname:{$regex: wordsearched}}
+        
+      ]});
+  
+      res.status(200).json(formers);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
   };

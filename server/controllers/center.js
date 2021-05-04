@@ -6,6 +6,7 @@ import Gouvernorat from '../models/gouvernorat.js';
 import Categorie from '../models/categorie.js';
 import City from '../models/cities.js';
 import Training from '../models/training.js';
+
 export const getCentre = async (req, res) => {
   try {
     console.log("params", req.query.InputSearch);
@@ -68,6 +69,12 @@ export const  signupcentre = async (req, res) => {
       const hashedpassword = await bcrypt.hash(password, 12);
       const result = await Center.create({lastname,namespeciality,idspeciality, phone, adressexact, namecities, namegouvernorate,idcity, description, idgouvernorate, email, password: hashedpassword, confirmerMotdepasse, selectedimage});
       const token = jwt.sign({email: result.email, id: result._id}, 'test', {expiresIn:"1d"});
+      let tabCateg = [];
+     const spe=  await Categorie.find({_id:{$in : idspeciality}});
+     spe.map(async(el)=> {
+      tabCateg.push(el._id);
+      } )
+      await Categorie.updateMany({_id : {$in : tabCateg }}, {$push:{ idscentre : result._id}})
       res.status(200).json({result, token});
    }
    catch (error) {
@@ -133,10 +140,11 @@ export const  signupcentre = async (req, res) => {
   
       const AllCentres = await Center.find({
         $and: [
-        { idspeciality: { $in: idsspecialitys } },
-
+          {idspeciality : { $in : idsspecialitys}},
+        { idgouvernorate: { $in: idsgouvernorat } }, 
+        { idcity: { $in: idscity } },  
       
-       // {lastname:{$regex : inputsearched}},
+        {lastname:{$regex : inputsearched}},
   
   
         ],
@@ -244,3 +252,64 @@ export const  signupcentre = async (req, res) => {
     };
   
   };
+
+  export const getCenters = async (req,res) => {
+    try {
+     
+      const center = await Center.find();
+       console.log("center",center);
+      res.status(200).json(
+        center
+             );
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+
+    };
+  };
+
+  export const deleteCenter = async (req, res) => {
+    try {
+    const  id  = req.query.id;
+    const center = await Center.find({_id: {$in: id}});
+center.map(async(el)=> {
+  await Center.findByIdAndRemove(el._id);
+  const training = await Training.find({id_center: id});
+  console.log(training);
+  training.map(async(e)=>
+{   
+ await Training.findByIdAndRemove(e._id);
+ await Categorie.findByIdAndRemove(e._id);
+}
+  )
+
+})
+     
+    res.json({ message: "le centre a ete supprimer avec succés !" });
+    }catch (error) {
+      res.status(404).json({ message: error.message });
+      console.log(error.message)
+    }
+  };
+
+  export const getSearched = async (req, res) => {
+    try {
+      console.log(req.query.InputSearch);
+      const wordsearched = req.query.InputSearch.toLowerCase().replace(
+        /\s\s+/g,
+        " "
+      );
+     
+  
+      const centers = await Center.find( 
+        {lastname:{$regex: wordsearched}}
+        
+  );
+  
+      res.status(200).json(centers);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  };
+
+
+ 

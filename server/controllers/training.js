@@ -8,6 +8,7 @@ import  mongoose  from 'mongoose';
 
 export const getSearchedTraining = async (req, res) => {
   try {
+    console.log(req.query.InputSearch);
     const wordsearched = req.query.InputSearch.toLowerCase().replace(
       /\s\s+/g,
       " "
@@ -86,18 +87,34 @@ export const getSearchedTraining = async (req, res) => {
       },
     ]);
 
-    console.log("Training", trainings);
-
     res.status(200).json(trainings);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
+ export const getSearched = async (req, res) => {
+  try {
+    console.log(req.query.InputSearch);
+    const wordsearched = req.query.InputSearch.toLowerCase().replace(
+      /\s\s+/g,
+      " "
+    );
+   
+
+    const trainings = await Training.find( {name:{$regex: wordsearched}});
+
+    res.status(200).json(trainings);
+    console.log('lawej',trainings);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+}; 
+
+
 export const getnotshowfilter = async (req, res) => {
   try {
     const page = parseInt(req.query.page || "1");
-    console.log("page numéro", req.query.page);
 
     const PAGE_SIZE = 3;
    
@@ -106,7 +123,6 @@ export const getnotshowfilter = async (req, res) => {
     const Alltraining = await Training.find({}
     ).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
 
-    console.log("filter masqué");
     const total = await Training.countDocuments();
   
     //console.log("Alltraining", Alltraining);
@@ -128,41 +144,34 @@ export const getnotshowfilter = async (req, res) => {
 export const getTrainings = async (req, res) => {
   try {
     const page = parseInt(req.query.page || "1");
-    console.log("page numéro", req.query.page);
     const PAGE_SIZE = 2;
     const minPrice = req.query.value[0];
     const maxPrice = req.query.value[1];
-    console.log(minPrice, maxPrice);
+    //console.log(minPrice, maxPrice);
     const minHeure = req.query.heures[0];
     const maxHeure = req.query.heures[1];
-    console.log(minHeure, maxHeure);
+    //console.log(minHeure, maxHeure);
     const datedebut = req.query.datedeb;
     console.log(datedebut);
     const datefin = req.query.datefin;
-    console.log(datefin);
+   // console.log(datefin);
     const inputsearched = req.query.InputSearch.replace(/\s\s+/g, " ");
-    console.log(inputsearched); 
+    //console.log(inputsearched); 
 
 
     let idscategories = [];
-    //console.log("before if ");
     if (req.query.categoriesids && req.query.categoriesids.length > 0) {
-      console.log("in if ", req.query.categoriesids);
-
+      //console.log("in if ", req.query.categoriesids);
       idscategories = req.query.categoriesids;
     } else {
-      //console.log("in else ");
-
       const cats = await Categorie.find({}, { _id: 1 });
 
       //console.log(cats);
       cats.map((el) => {
-        //console.log(el._id);
         idscategories.push(el._id);
       });
-      //console.log(idscategories);
-    }
-    //console.log("after if ");
+    }      //console.log(idscategories);
+
 
     let idsgouvernorat = [];
     if (req.query.gouvernoratid && req.query.gouvernoratid.length > 0) {
@@ -197,37 +206,22 @@ export const getTrainings = async (req, res) => {
     }
     //console.log("after else cities");
 
-   
-let select = [];
-if(req.query.selected && req.query.selected.length>0) {
-select=req.query.selected;
-}
-else {
-  select.push("Commence");
-}
-console.log(select);
-    const Alltraining = await Training.find({
+     const Alltraining = await Training.find({
       
         $and: [
       
-
-          {name:{$regex : inputsearched}},
-          /* &&{lastdate:{$lte:datefin}}&&{firstdate:{datedebut}}&&
-          {lastdate:{datefin}}:select==="Termine" ? {lastdate:{datedebut}}&&{firstdate:{datedebut}}&& {lastdate:{datefin}}&&
-          {lastdate:{$lte:datefin, $gte:datedebut}}&& {firstdate:{$lte:datefin, $gte:datedebut}}:{datedebut:{$lte:2030,$gte:1920}},  */
-         
-         
-      //select==="Commence" ? {lastdate:{$gte:datefin}}:{lastdate:{$gte:datefin}},
-  
-      // { idcategorie: { $in: idscategories } },
-          { price: { $gte: minPrice, $lte: maxPrice } },
-         /* { periode: { $gte: minHeure, $lte: maxHeure } }, 
           { idcategorie: { $in: idscategories } },
-     
-           { idgouvernorate: { $in: idsgouvernorat } }, 
-          { idcity: { $in: idscity } },  */
-  /*         datedebut ==="1920-01-01" ? {firstdate: {$gte: datedebut} } : {firstdate: datedebut},
-   */    /*     datefin ==="2030-01-01" ? {lastdate: {$lte: datefin} } : {lastdate: datefin}, */
+          { price: { $gte: minPrice, $lte: maxPrice } },
+          { idgouvernorate: { $in: idsgouvernorat } }, 
+          { idcity: { $in: idscity } },  
+          { periode: { $gte: minHeure, $lte: maxHeure } },  
+
+           {firstdate: {$gte: datedebut} } ,
+           {lastdate: {$lte: datefin} } , 
+          {name:{$regex : inputsearched}},
+          
+  
+      
   
 
       
@@ -235,12 +229,11 @@ console.log(select);
      
     }).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
 
-    console.log("houni1");
     const total = await Training.countDocuments();
     // console.log("total", total);
-    console.log("Alltraining", Alltraining);
     //let totalPages = Math.ceil(total / PAGE_SIZE);
     //console.log("totalpages", totalPages);
+    console.log('gogoo',Alltraining);
     res.status(200).json({
       Alltraining,
       totalPages: Math.ceil(total / PAGE_SIZE),
@@ -253,12 +246,14 @@ console.log(select);
 export const deleteTraining = async (req, res) => {
   try {
   const  id  = req.query.id;
+  console.log(id);
+  const training = await Training.find({_id: {$in: id}});
+ training.map(async(e)=> {
+   console.log(e._id);
+  await Training.findByIdAndRemove(e._id);
+  await Former.updateOne({ $pull :{training: e._id}} );
 
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send("Aucune formation avec cet id ");
-  const training = await Training.findOne({_id:id});
-  await Training.findByIdAndRemove(id);
-  await Former.updateOne({ $pull :{training: training._id}} );
+ })
 
   res.json({ message: "la formation a ete supprimer avec succés !" });
   }catch (error) {
@@ -270,7 +265,6 @@ export const deleteTraining = async (req, res) => {
 export const getrecentTraining = async (req, res) => {
   try {
     const page = parseInt(req.query.page || "1");
-    console.log("page numéro", req.query.page);
 
     const PAGE_SIZE = 3;
     
@@ -299,7 +293,6 @@ export const getOneTraining = async (req, res) => {
     const OneTraining = await Training.find({_id:ids});
 
    
-    console.log("OneTraining", OneTraining);
    
     res.status(200).json({
       OneTraining,
@@ -430,6 +423,123 @@ export const creatTrainingcenter = async (req, res) => {
     console.log(error.message);
   }
 };
+export const creatTrainingformer = async (req, res) => {
+  const {
+    name, 
+    firstdate,
+    lastdate,
+    hour,
+    price,
+    namecity,
+    periode,
+    numberplace,
+    planning,
+    description,
+    objectif,
+    skills,
+    selectedimage,
+    namegouvernorate,
+    namecategorie,
+    idcity,
+    idgouvernorate,
+    idcategorie,
+    longitude,
+    latitude,
+    createdAt,
+    name_former,
+  } = req.body;
+  const newTraining = new Training({
+    name, 
+    firstdate,
+    lastdate,
+    hour,
+    price,
+    namecity,
+    periode,
+    numberplace,
+    planning,
+    description ,
+    objectif,
+    skills,
+    selectedimage,
+    idcity,
+    namegouvernorate,
+    namecategorie,
+    idgouvernorate,
+    idcategorie,
+    longitude,
+    latitude,
+    name_former,
+    createdAt,
+  });
+  try {
+    await newTraining.save();
+    res.status(201).json(newTraining);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+    console.log(error.message)
+  }
+};
+
+
+
+export const creatTrainingforcenter = async (req, res) => {
+  const {
+    name, 
+    firstdate,
+    lastdate,
+    hour,
+    price,
+    namecity,
+    periode,
+    numberplace,
+    planning,
+    description,
+    objectif,
+    skills,
+    selectedimage,
+    namegouvernorate,
+    namecategorie,
+    idcity,
+    idgouvernorate,
+    idcategorie,
+    longitude,
+    latitude,
+    createdAt,
+    name_center,
+  } = req.body;
+  const newTraining = new Training({
+    name, 
+    firstdate,
+    lastdate,
+    hour,
+    price,
+    namecity,
+    periode,
+    numberplace,
+    planning,
+    description ,
+    objectif,
+    skills,
+    selectedimage,
+    idcity,
+    namegouvernorate,
+    namecategorie,
+    idgouvernorate,
+    idcategorie,
+    longitude,
+    latitude,
+    name_center,
+    createdAt,
+  });
+  try {
+    await newTraining.save();
+    res.status(201).json(newTraining);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+    console.log(error.message)
+  }
+};
 
 
 
@@ -461,7 +571,6 @@ export const updateTraining = async (req, res) => {
     { new: true }
   );
   res.json(updatedTraining);
-  console.log(updatedTraining)
   }
   catch(error) {
     res.status(404).json({message: error.message});
@@ -471,7 +580,11 @@ export const updateTraining = async (req, res) => {
 export const getAllTrainings = async (req, res) => {
   try {
     const trainingall = await Training.find();
-    res.status(200).json(trainingall);
+   
+      res.status(200).json(trainingall);
+
+
+  
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -487,6 +600,39 @@ export const getnameFormer = async (req, res) => {
     const nameformer = await Former.find({ _id: { $in: idsforme } });
 
     res.status(200).json(nameformer);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+
+export const getAllTrainingsCenter = async (req, res) => {
+  try {
+    const trainingallcenter = await Training.find(
+{id_center : { $ne: null }  }   
+    );
+    res.status(200).json(trainingallcenter);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+export const getAllTrainingsformer = async (req, res) => {
+  try {
+    const trainingallformer = await Training.find(
+{id_former : { $ne: null }  }   
+    );
+    res.status(200).json(trainingallformer);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getAllTrainingsAdmin = async (req, res) => {
+  try {
+    const trainingalladmin = await Training.find(
+{   $or: [ {name_former : { $ne: null }} , {name_center : { $ne: null }} ]}   
+    );
+    res.status(200).json(trainingalladmin);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
