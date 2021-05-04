@@ -47,7 +47,7 @@ const App = () => {
                 <>
                 <Navbar /> 
                 <Route path="/" exact component={Search} />
-                <Route path="/formations">  {/* <Formation /> */}  <Form/>   </Route>
+                <Route path="/formations">   {/*  <Formation />   */}   <Form/>  </Route>
                 <Route path="/formateurs"> <Former/>  {/* <Form/>   */}   </Route>
                 <Route path="/centredeformation">  <Centre/> </Route>
                 <PrivateRoute path="/myaccount" component={Account}></PrivateRoute>

@@ -35,7 +35,7 @@ const CardOne = ({Former}) => {
        
         <div className={classes.place}>
            <WbIncandescentIcon className={classes.Placeicon} />   
-           <span className={classes.lieu}>  Domaine :  { Former.namespeciality}</span>
+           <span className={classes.lieu}>  Domaine :  { Former.namespeciality  }</span>
         </div>
         <div className={classes.place}>
           <Filter9PlusIcon className={classes.Placeicon} />

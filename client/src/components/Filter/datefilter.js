@@ -86,9 +86,9 @@ const Datefilter = ({
           onChange={handleChange1}
           valueLabelDisplay="auto"
           aria-labelledby="range-slider"
-          step={1}
+          step={4}
           min={0}
-          max={10000}
+          max={500}
           className={classes.duree}
         />
       </div>

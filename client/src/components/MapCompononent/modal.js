@@ -10,21 +10,17 @@ import { getTrainings } from "../../actions/training";
 import Map from "./map";
 import { Button } from "@material-ui/core";
 import useStyles from "./styles";
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
+
 
 export default function SimpleModal() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [Gouvernorat, setGouvernorats] = useState([]);
   const [City, setCity] = useState([]);
   const [filtredCity, setfiltredCity] = useState([]);
   const [FilterTraining, setFilterTraining] = useState([]);
-  const [Gouvernoratselected, setGouvernoratselected] = useState();
-  const [Cityselected, setCityselected] = useState();
   const [Trainings, SetTrainings] = useState([]);
   const [gouv, setGouv] = useState();
   const [citys, setCitys] = useState();
@@ -43,9 +39,12 @@ export default function SimpleModal() {
     });
     dispatch(getTrainings()).then((res) => {
       SetTrainings(res);
-    });
-  }, []);
 
+
+    
+    });
+
+  }, []);
   const FilterTrainings = (IdGouv, Idcity) => {
     //gouvernorat
     if (IdGouv !== null) {
@@ -62,31 +61,27 @@ export default function SimpleModal() {
       setfiltredCity([]);
     } else {
       setfiltredCity(City.filter((x) => x.id_gouvernorat === value._id));
-      setGouvernoratselected(value._id);
       setGouv(value);
       let idcitys = null;
-      FilterTrainings(Gouvernoratselected, idcitys);
+      FilterTrainings(value._id, idcitys);
     }
   };
 
   const handleChangecity = (e, value) => {
     e.preventDefault();
-    setCityselected(value._id);
     setCitys(value);
     let idgouv = null;
-    FilterTrainings(idgouv, Cityselected);
+    FilterTrainings(idgouv, value._id);
   };
 
   const handleOpen = () => {
-    setOpen(true);
-
-    setFilterTraining(
-      Trainings.filter((e) => e.idgouvernorate === user.idgouvernorate)
-    );
+setOpen(true);
+setFilterTraining(Trainings.filter((e)=> e.idgouvernorate === user.idgouvernorate)); 
   };
 
-  const handleClose = () => {
-    setOpen(false);
+const handleClose = () => {
+ setOpen(false);
+
   };
 
 
@@ -121,6 +116,7 @@ export default function SimpleModal() {
         />
       </div>
       <Map
+
         FilteredTraining={FilterTraining}
         gouvernorat={gouv}
         city={citys}
@@ -139,6 +135,7 @@ export default function SimpleModal() {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
+      
         {body}
       </Modal>
     </div>
