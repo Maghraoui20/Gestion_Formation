@@ -6,10 +6,9 @@ import Gouvernorat from '../models/gouvernorat.js';
 import Categorie from '../models/categorie.js';
 import City from '../models/cities.js';
 import Training from '../models/training.js';
-
 export const getCentre = async (req, res) => {
   try {
-    console.log("params", req.query.InputSearch);
+  
     const wordsearched = req.query.InputSearch.replace( /\s\s+/g, ' ' );
 
     const center= await Center.aggregate([
@@ -50,9 +49,7 @@ export const getCentre = async (req, res) => {
       },
     ]);
 
-    console.log("Centres", center);
     res.status(200).json(center);
-    console.log('houni');
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -69,33 +66,23 @@ export const  signupcentre = async (req, res) => {
       const hashedpassword = await bcrypt.hash(password, 12);
       const result = await Center.create({lastname,namespeciality,idspeciality, phone, adressexact, namecities, namegouvernorate,idcity, description, idgouvernorate, email, password: hashedpassword, confirmerMotdepasse, selectedimage});
       const token = jwt.sign({email: result.email, id: result._id}, 'test', {expiresIn:"1d"});
-      let tabCateg = [];
-     const spe=  await Categorie.find({_id:{$in : idspeciality}});
-     spe.map(async(el)=> {
-      tabCateg.push(el._id);
-      } )
-      await Categorie.updateMany({_id : {$in : tabCateg }}, {$push:{ idscentre : result._id}})
       res.status(200).json({result, token});
    }
    catch (error) {
        res.status(500).json({message:"erreur "});
        console.log(error);
-  
    }
   }
   export const getAllCenters = async (req, res) => {
     try {
       const page = parseInt(req.query.page || "1");
-      console.log("page numéro", req.query.page);
   
       const PAGE_SIZE = 3;
     
       const inputsearched = req.query.InputSearch.replace(/\s\s+/g, " ");
-      console.log(inputsearched);
       let idsspecialitys = [];
 
       if (req.query.SpecialityIds && req.query.SpecialityIds.length > 0) {
-        console.log("in if ", req.query.SpecialityIds);
   
         idsspecialitys = req.query.SpecialityIds;
       } else {
@@ -150,8 +137,6 @@ export const  signupcentre = async (req, res) => {
         ],
       }).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
   
-      console.log("houni1");
-      console.log(AllCentres)
       res.status(200).json({
         AllCentres,
         
@@ -163,11 +148,9 @@ export const  signupcentre = async (req, res) => {
   };
   
   
-  
   export const getnotshowcentre = async (req, res) => {
     try {
       const page = parseInt(req.query.page || "1");
-      console.log("page numéro", req.query.page);
   
       const PAGE_SIZE = 3;
      
@@ -176,7 +159,6 @@ export const  signupcentre = async (req, res) => {
       const AllCentres = await Center.find({}
       ).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
   
-      console.log("filter masqué");
       const total = await Center.countDocuments();
     
       //console.log("AllCentres", AllCentres);
@@ -194,14 +176,12 @@ export const  signupcentre = async (req, res) => {
   export const getrecentCentre = async (req, res) => {
     try {
       const page = parseInt(req.query.page || "1");
-      console.log("page numéro", req.query.page);
   
       const PAGE_SIZE = 3;
       
       const AllCentres = await Center.find().sort({ createdAt: -1 }).limit(PAGE_SIZE).skip(PAGE_SIZE * (page - 1));
   
       const total = await Center.countDocuments();
-      console.log("AllCentres", AllCentres);
 
       res.status(200).json({
         AllCentres,
@@ -219,11 +199,9 @@ export const  signupcentre = async (req, res) => {
       
       const  ids  = req.query.idcenter;
     
-      console.log("id centre",ids);
       const OneCenter = await Center.find({_id:ids});
   
      
-      console.log("OneCenter", OneCenter);
      
       res.status(200).json({
         OneCenter,
@@ -233,16 +211,16 @@ export const  signupcentre = async (req, res) => {
       res.status(404).json({ message: error.message });
     };
   };
+
+
   export const getTrainingcenter = async (req,res) => {
     try {
       const  idf  = req.query.id;
-      console.log(idf)
+    
    const page = parseInt(req.query.page || "1");
 
-      console.log("page numéro", req.query.page);
       const PAGE_SIZE = 3;
       const Trainings = await Training.find({id_center:idf}).limit(PAGE_SIZE).skip(PAGE_SIZE* (page - 1));
-       console.log("trainings",Trainings);
       res.status(200).json(
         Trainings
              );
@@ -257,7 +235,6 @@ export const  signupcentre = async (req, res) => {
     try {
      
       const center = await Center.find();
-       console.log("center",center);
       res.status(200).json(
         center
              );
@@ -274,7 +251,6 @@ export const  signupcentre = async (req, res) => {
 center.map(async(el)=> {
   await Center.findByIdAndRemove(el._id);
   const training = await Training.find({id_center: id});
-  console.log(training);
   training.map(async(e)=>
 {   
  await Training.findByIdAndRemove(e._id);
@@ -293,7 +269,6 @@ center.map(async(el)=> {
 
   export const getSearched = async (req, res) => {
     try {
-      console.log(req.query.InputSearch);
       const wordsearched = req.query.InputSearch.toLowerCase().replace(
         /\s\s+/g,
         " "
@@ -310,6 +285,3 @@ center.map(async(el)=> {
       res.status(404).json({ message: error.message });
     }
   };
-
-
- 

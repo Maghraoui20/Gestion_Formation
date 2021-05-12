@@ -27,7 +27,7 @@ const formerSchema = mongoose.Schema({
     resetLink: {
         data: String,
         default :'',
-      }
+      },
 
 
 

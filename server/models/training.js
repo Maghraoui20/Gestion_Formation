@@ -17,11 +17,10 @@ latitude:Number,
 namegouvernorate:String,
 namecategorie:String,
 selectedimage: String,
-name_former:String,
-name_center:String,
+
 createdAt: {
     type: Date,
-    default: new Date()
+    default: new Date() 
 },
 idcity:{type: mongoose.Schema.ObjectId, ref : 'cities'},
 idgouvernorate:{type: mongoose.Schema.ObjectId, ref : 'gouvernorat'},

@@ -15,7 +15,9 @@ import {
   creatTrainingformer,
   creatTrainingforcenter,
   getAllTrainingsAdmin,
-  getSearched
+  getSearched,
+  gettraingcateg,
+  gettrainingmonths
  } from "../controllers/training.js";
 const router = express.Router();
 router.post("/", creatTraining);
@@ -32,6 +34,8 @@ router.get("/trainingsformer", getAllTrainingsformer);
 router.post("/creatTrainingcenter", creatTrainingforcenter);
 router.post("/creatTrainingformer", creatTrainingformer);
 router.get("/trainingsadmin",getAllTrainingsAdmin);
+router.get('/categtraining', gettraingcateg);
+router.get('/months', gettrainingmonths);
 
  router.get('/search', getSearched);
  export default router;

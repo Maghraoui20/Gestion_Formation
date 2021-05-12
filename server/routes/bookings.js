@@ -1,9 +1,14 @@
 import express from 'express';
-import {getBooking,Reserverformation,getSearchBooking} from '../controllers/bookings.js';
-
+import {Reserverformation, Getreservationbyid,getreservedtraining,CancelReservation, Reservationcancled,getSearchBooking,getBooking} from '../controllers/bookings.js';
 const router = express.Router();
-
-router.get('/booking', getBooking);
-router.post('/reserver',Reserverformation);
+router.post ('/reserver',Reserverformation)
+router.get ('/getbyid',Getreservationbyid)
+router.get ('/getvalider',getreservedtraining)
+router.delete ('/annuler', CancelReservation)
+router.delete ('/delete', Reservationcancled)
 router.get('/',getSearchBooking);
-export default router;
+router.get('/booking', getBooking);
+
+
+
+export default router ;

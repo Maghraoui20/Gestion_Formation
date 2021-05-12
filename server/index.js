@@ -13,6 +13,7 @@ import Userroutes from "./routes/user.js";
 import Adminroutes from './routes/admin.js';
 import BookingRoutes from './routes/bookings.js';
 import FavoriteRoutes from './routes/favorite.js';
+import Opinionroutes from './routes/opinion.js';
 
 
 
@@ -32,6 +33,7 @@ app.use('/user', Userroutes);
 app.use('/bookings',BookingRoutes);
 app.use('/admin', Adminroutes);
 app.use('/favorite',FavoriteRoutes);
+app.use ('/opinion',Opinionroutes);
 
 
 

@@ -5,10 +5,8 @@ import Centre from "../models/centre.js";
 import User from '../models/user.js';
 import Categorie from "../models/categorie.js";
 import Training from '../models/training.js';
-
 export const getFormer = async (req, res) => {
   try {
-    //console.log("params", req.query.InputSearch);
     const wordsearched = req.query.InputSearch.replace(/\s\s+/g, " ");
 
     const formers = await Former.aggregate([
@@ -105,15 +103,6 @@ export const  signupformer = async (req, res) => {
          email, 
          password: hashedpassword,});
       const token = jwt.sign({email: result.email, id: result._id}, 'test', {expiresIn:"1d"});
-
-      let tabCateg = [];
-      const spe=  await Categorie.find({_id:{$in : idspeciality}});
-      spe.map(async(el)=> {
-       tabCateg.push(el._id);
-       } )
-       await Categorie.updateMany({_id : {$in : tabCateg }}, {$push:{ idsformer : result._id}})
-
-
       res.status(200).json({result, token});
    }
    catch (error) {
@@ -128,8 +117,7 @@ export const  signupformer = async (req, res) => {
       const PAGE_SIZE = 3;
       const minAge = req.query.age[0];
       const maxAge = req.query.age[1];
-      console.log(minAge);
-      console.log(maxAge);
+    
       const inputsearched = req.query.InputSearch.replace(/\s\s+/g, " ");
       let idsspecialitys = [];
       if (req.query.SpecialityIds && req.query.SpecialityIds.length > 0) {
@@ -156,7 +144,6 @@ export const  signupformer = async (req, res) => {
     selectsexe.push("Femme");
     selectsexe.push("Homme")
   }
-  console.log(selectsexe);
       const AllFormer = await Former.find({
         $and: [
   
@@ -180,6 +167,7 @@ export const  signupformer = async (req, res) => {
       res.status(404).json({ message: error.message });
     }
   };
+   
    
   
   
@@ -247,9 +235,6 @@ export const  signupformer = async (req, res) => {
       res.status(404).json({ message: error.message });
     };
   };
-
-
-  
   export const getTrainingFormer = async (req,res) => {
     try {
       const  idf  = req.query.id;
@@ -265,6 +250,7 @@ export const  signupformer = async (req, res) => {
 
     };
   };
+
   export const getFormers = async (req,res) => {
     try {
      
@@ -306,7 +292,6 @@ former.map(async(el)=>{
 
   export const getSearched = async (req, res) => {
     try {
-      console.log(req.query.InputSearch);
       const wordsearched = req.query.InputSearch.toLowerCase().replace(
         /\s\s+/g,
         " "

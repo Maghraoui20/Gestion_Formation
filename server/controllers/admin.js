@@ -47,11 +47,11 @@ export const signin = async (req, res) => {
           res.json({ result, message });
         }
         else if (admin.email !== infos.email && !userexist && !formerexist && !centerexist && !infos.mdpactuel) {
-          console.log(`houni`)
+     
           const result = await Admin.findByIdAndUpdate(_id, { email: infos.email}, { new: true });
           const message = "success!";
           console.log(message)
-          console.log(`houni`)
+        
   
           res.json({ result, message });
         }
@@ -65,7 +65,7 @@ export const signin = async (req, res) => {
           res.json({ result, message });
         }
         else if (admin.email === infos.email && !infos.mdpactuel) {
-          console.log('houni')
+      
           const result = await Admin.findByIdAndUpdate(_id, { email: infos.email }, { new: true });
           const message = "success!";
           res.json({ result, message });

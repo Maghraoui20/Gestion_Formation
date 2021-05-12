@@ -3,17 +3,16 @@ import jwt from 'jsonwebtoken';
 import Former from "../models/former.js";
 import Centre from "../models/centre.js";
 import User from '../models/user.js';
-import Admin from '../models/admin.js';
 import _ from 'lodash';
-
 import Mailgrid from "@sendgrid/mail";
+
 Mailgrid.setApiKey(
   "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"
 );
 const url = "http://localhost:3000";
 
 export const signup = async (req, res) => {
-  const { firstname, lastname, city, gouvernorate, idgouvernorate,idcity,cin, phone, email, password, confirmerMotdepasse, } = req.body;
+  const { firstname, lastname, city, gouvernorate, idgouvernorate,idcity, cin, phone, email, password, confirmerMotdepasse, } = req.body;
   try {
     const userexist = await User.findOne({ email });
     const formerexist = await Former.findOne({ email });
@@ -21,8 +20,9 @@ export const signup = async (req, res) => {
     if (userexist || formerexist || centreexist) return res.status(400).json({ message: 'Email exist déjà' });
     if (password !== confirmerMotdepasse) return res.status(400).json({ message: 'confimer votre mot de passe' });
     const hashedpassword = await bcrypt.hash(password, 12);
-    const result = await User.create({ firstname, lastname, city, gouvernorate, cin,idgouvernorate,idcity, phone, email, password: hashedpassword });
+    const result = await User.create({firstname, lastname, city, gouvernorate, idgouvernorate,idcity,cin, phone, email, password: hashedpassword });
     const token = jwt.sign({ email: result.email, id: result._id }, 'test', { expiresIn: "1d" });
+    
     res.status(200).json({ result, token });
   }
   catch (error) {
@@ -37,7 +37,6 @@ export const signin = async (req, res) => {
     const user = await User.findOne({ email });
     const userformer = await Former.findOne({ email });
     const usercentre = await Centre.findOne({ email });
-
     if (user) {
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if (!isPasswordCorrect) return res.status(400).json({ message: "mot de passe incorrect" });
@@ -72,8 +71,6 @@ export const forgetpassword = async (req, res) => {
     const user = await User.findOne({ email });
     const userformer = await Former.findOne({ email });
     const usercentre = await Centre.findOne({ email });
-    const useradmin = await Admin.findOne({ email });
-
     if (user) {
       const token = jwt.sign({ email: user.email, id: user._id }, 'resetpass2021', { expiresIn: "30min" });
       const emailinfos = {
@@ -170,40 +167,9 @@ export const forgetpassword = async (req, res) => {
         }
       });
     }
-    else if (useradmin) {
-      const token = jwt.sign({ email: useradmin.email, id: useradmin._id }, 'resetpass2021', { expiresIn: "30min" });
-      const emailinfos = {
-        from: 'mayssa.riahi@esen.tn',
-        to: email,
-        subject: "changer Mot de passe ",
-        html: `
-          <h1>Clicker ce lien pour changer votre mot de passe </h1>
-          <p> ${url}/user/resetpassword/${token} </p>
-          <hr />
-          <p>Ce link va expirer dans 30 minuttes </p>
-                `,
-      };
-      return useradmin.updateOne({ resetLink: token }, (err, useradmin) => {
-        if (err || !useradmin) {
-          return res.status(400).json({
-            errors: "reset password link error",
-          });
-        } else {
-          Mailgrid
-            .send(emailinfos)
-            .then(() => {
-              return res.send(`a reset password link has been sent to ${email}`);
-            })
-            .catch((err) => {
-              return res.status(400).json({
-                err,
-              });
-            });
-        }
-      });
-    }
+
     else {
-      if (!user && !userformer && !usercentre && !useradmin) return res.status(404).json({ message: "utilisateur inexistant" });
+      if (!user && !userformer && !usercentre) return res.status(404).json({ message: "utilisateur inexistant" });
     }
 
   } catch (err) {
@@ -217,8 +183,6 @@ export const resetpassword = async (req, res) => {
   const user = await User.findOne({ resetLink });
   const userformer = await Former.findOne({ resetLink })
   const usercentre = await Centre.findOne({ resetLink })
-  const useradmin = await Admin.findOne({ resetLink })
-
   if (resetLink) {
     jwt.verify(
       resetLink,
@@ -253,7 +217,6 @@ export const resetpassword = async (req, res) => {
           const updatedFields = {
             password: hashedpassword,
           };
-          console.log(updatedFields);
           //update the user in the databae
           userformer == _.extend(userformer, updatedFields);
           userformer.save((err, resultat) => {
@@ -272,9 +235,8 @@ export const resetpassword = async (req, res) => {
         }
         else if (usercentre) {
           const updatedFields = {
-            password: hashedpassword,
+          password: hashedpassword,
           };
-          console.log(updatedFields);
           //update the user in the databae
           usercentre == _.extend(usercentre, updatedFields);
           usercentre.save((err, resultat) => {
@@ -288,29 +250,8 @@ export const resetpassword = async (req, res) => {
             });
           });
         }
-        else if (useradmin) {
-          const updatedFields = {
-            motdepasse: hashedpassword,
-          };
-          console.log(updatedFields);
-          //update the user in the databae
-          useradmin == _.extend(useradmin, updatedFields);
-          useradmin.save((err, resultat) => {
-            if (err) {
-              console.log(err.message);
-              return res.status(400).json({
-                error: err.message,
-
-              });
-
-            }
-            res.json({
-              message: "mot de passe modifier avec succées",
-            });
-          });
-        }
         else {
-          if (!user && !userformer && !usercentre && !useradmin) return res.status(404).json({ message: "utilisateur inexistant" });
+          if (!user && !userformer && !usercentre) return res.status(404).json({ message: "utilisateur inexistant" });
         }
       }
     );
@@ -322,7 +263,7 @@ export const resetpassword = async (req, res) => {
 export const updateUser = async (req, res) => {
   const { id: _id } = req.params;
   const infos = req.body;
- 
+
   try {
 
     const user = await User.findOne({ _id });
@@ -343,7 +284,7 @@ export const updateUser = async (req, res) => {
         res.json({ result, message });
       }
       else if (centre.email !== infos.email && !userexist && !formerexist && !centerexist && !infos.mdpactuel) {
-        console.log(`houni`)
+     
         const result = await Centre.findByIdAndUpdate(_id, { lastname: infos.lastname, phone: infos.phone, email: infos.email, namecities: infos.namecities, namegouvernorate: infos.namegouvernorate, idspeciality: infos.idspeciality, namespeciality: infos.namespeciality, selectedimage: infos.selectedimage, idgouvernorate: infos.idgouvernorate, idcity: infos.idcity, adressexact: infos.adressexact, description: infos.description }, { new: true });
         const message = "success!";
         console.log(message)
@@ -398,7 +339,7 @@ export const updateUser = async (req, res) => {
       }
     }
 if(former) {
-  
+     
       if (former?.email !== infos.email && !userexist && !formerexist && !centerexist && infos.mdpactuel) {
         const isPasswordCorrect = await bcrypt.compare(infos.mdpactuel, former.password);
         if (!isPasswordCorrect) return res.status(400).json({ message: "mot de passe incorrect" });
@@ -438,12 +379,11 @@ if(former) {
     res.status(500).json({ message: err.message });
 
   }
-};
+}
 export const getClients = async (req,res) => {
   try {
    
     const users = await User.find();
-     console.log("center",users);
     res.status(200).json(
       users
            );
@@ -472,7 +412,6 @@ user.map(async(el)=>{
 
 export const getSearch = async (req, res) => {
   try {
-    console.log(req.query.InputSearch);
     const wordsearched = req.query.InputSearch.toLowerCase().replace(
       /\s\s+/g,
       " "
@@ -495,5 +434,3 @@ export const getSearch = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
-
-

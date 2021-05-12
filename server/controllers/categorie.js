@@ -1,8 +1,5 @@
-import express from 'express';
-import mongoose from 'mongoose';
 import Categorie from '../models/categorie.js';
 
-const router = express.Router();
 
 export const getcategorie = async (req, res) => {
     try {
@@ -51,7 +48,7 @@ export const updateCategorie = async (req, res) => {
 };
 export const getSearchCategorie = async (req, res) => {
   try {
-    console.log(req.query.InputSearch);
+   
     const wordsearched = req.query.InputSearch.toUpperCase().replace(
       /\s\s+/g,
       " "
