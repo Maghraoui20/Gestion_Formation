@@ -26,7 +26,7 @@ import {getSearchFormer} from '../../actions/former';
 import {deleteFormer} from '../../actions/former';
 import AddIcon from "@material-ui/icons/Add";
 import useStyles1 from "./styles";
-
+import Popup from './popup1';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -146,10 +146,20 @@ const  EnhancedTableToolbar = ({numSelected, Former}) => {
   //const { numSelected } = numSelected;
     const history= useHistory();
     const dispatch = useDispatch();
-const Delete =() => { dispatch(deleteFormer(Former))
 
-if(alert('Voulez vous vraiment supprimer ce formateur'))
-document.location.href("/Formateurs");
+    const [isOpen, setIsOpen] = useState(false);
+    const Opening =()=>{
+     setIsOpen(true);
+   
+    }
+    const Closing =()=>{
+      setIsOpen(false);
+    
+     }
+const Delete =() => { dispatch(deleteFormer(Former))
+  alert('ce formateur a été supprimé avec succès');
+  window.location.reload(false);
+
 };
   const Update = () => {
 
@@ -178,10 +188,15 @@ document.location.href("/Formateurs");
       {numSelected > 0 ? (
           <div className={classes1.divicons}>
           <Tooltip title="Supprimer">
-            <IconButton aria-label="delete" onClick={Delete}>
+            <IconButton aria-label="delete" onClick={Opening}>
               <DeleteIcon className={classes1.icon} />
             </IconButton>
           </Tooltip>
+          <Popup open={isOpen}
+           handleClose={Closing}
+           setOpen={setIsOpen} 
+           Delete={Delete}
+           />
           <Tooltip title="Modifier">
             <IconButton aria-label="update" onClick={Update}>
               <EditIcon className={classes1.icon} />
@@ -395,6 +410,8 @@ let allformer= '';
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Lignes par page"
+
         />
        
 

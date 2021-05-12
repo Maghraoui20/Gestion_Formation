@@ -1,7 +1,7 @@
 import React, { useEffect ,useState} from 'react';
 import { useDispatch } from 'react-redux';
 
-import {Bar,Doughnut, Polar} from 'react-chartjs-2';
+import {Bar,Doughnut, Line, Polar} from 'react-chartjs-2';
 import useStyles from './styles';
 import {getTrainingsformer,getTrainingsadmin,getTrainings} from "../../actions/trainings";
 import {getFormer} from "../../actions/former";
@@ -9,6 +9,10 @@ import {getCentre} from '../../actions/center';
 import {getClients} from '../../actions/users';
 import {getBookings} from '../../actions/bookings';
 import {getFavorite} from '../../actions/favorite';
+import {getcategorie} from '../../actions/categorie';
+import {getTrainingcateg} from '../../actions/trainings';
+import {getTrainingmonths} from '../../actions/trainings';
+import {getOpinions} from '../../actions/opinions';
 const Statistique = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -20,9 +24,10 @@ const Statistique = () => {
 const[Admin, SetAdmin] = useState([]);
 const [bookings,setBookings]=useState([]);
 const[favorite,setFavorite] =useState([]);
-
-
-
+const [categories, setCategories] = useState([]);
+const[nbre, setNbre] = useState([]);
+const[mois, setMois] = useState([]);
+const [opinion , setOpinion] = useState([]);
   useEffect(() => {
     dispatch(getTrainings()).then((res) => {
       SetTrainingscenter(res.length);
@@ -55,61 +60,47 @@ dispatch(getFavorite()).then((res)=>{
   setFavorite(res.length);
   
   })
+  dispatch(getOpinions()).then((res)=>{
+    setOpinion(res.length) ;
+       })
+  dispatch(getcategorie()).then((res)=>{
+ 
+    res.map((e)=> categories.push(e.nom))
+    
+    })
+    dispatch(getTrainingcateg()).then((res)=>{
+   setNbre(res) ;  
+      })
+      dispatch(getTrainingmonths()).then((res)=>{
+          setMois(res) ;
+             })
 
-
-  }, []); 
+  }, [dispatch]); 
    
-  
 
    
   return (
     <div>
     <div className={classes.divstat}>
-    <div className={classes.bar}>
-      <Bar 
-        data={{
-
-          labels: ['Formateurs', 'Centres de formations' , 'Admin'],
-          datasets: [
-   {
-     label: 'Formations',
-     backgroundColor: 'rgba(220, 118, 51,1)',
-     borderColor: 'rgba(0,220, 118, 51,1)',
-     borderWidth: 2,
-     data: [Trainingsformer,Trainingscenter, Admin]
-   }
- ]
-
-        }}
-        options={{
-          title:{
-            display:true,
-            text:'Les formations ajoutées par',
-            fontSize:20
-          },
-         
-        }}
-      />
-    </div>
+    
     <div className={classes.doughnut}>
     <Doughnut
           data={{labels: ['formateurs', 'centres de formations', 'clients'],
  datasets: [
    {
      backgroundColor: [
-/*       '#B21F00',
- */       '#DC7633',
-      '#2FDE00',
+
+       '#99A3A4',
+      ' #F39C12',
       
-/*  '#56367a',
- */       '#6800B4'
+
+       '#AF7AC5'
       ],
      hoverBackgroundColor: [
-     '#501800',
-     '#4B5000',
-     '#175000',
-     '#003350',
-     '#35014F'
+     '#99A3A4',
+    ' #F39C12',
+     '#AF7AC5',
+    
      ],
      data: [Formers,centres, Clients]
    }
@@ -128,45 +119,153 @@ dispatch(getFavorite()).then((res)=>{
         />
     </div>
   
-
-       
-    </div>
-
-
-<div  className={classes.div}>
-   
-<div className={classes.bar}>
-    <Polar
-          data={{labels: ['Réservations', 'favoris'],
- datasets: [
-   {
-     label: 'Rainfall',
-     backgroundColor: [
-       '#C9DE00',
-       '#56367a',
-    ],
-     hoverBackgroundColor: [
-     '#d3de6f',
-     '#DC7633',
     
-     ],
-     data: [bookings,favorite]
+   
+   <div className={classes.bar}>
+       <Polar
+             data={{labels: ['Réservations', 'favoris', 'Avis'],
+    datasets: [
+      {
+        label: 'Rainfall',
+        backgroundColor: [
+          '#780B66',
+          '#FFA07A',
+         ' #D7BDE2 '
+       ],
+        hoverBackgroundColor: [
+        '#780B66',
+        '#FFA07A',
+        '#D7BDE2 ',
+        ],
+        data: [bookings,favorite, opinion]
+      }
+    ]}}
+             options={{
+               title:{
+                 display:true,
+                 fontSize:20
+               },
+               legend:{
+                 display:true,
+                 position:'right'
+               }
+             }}
+           />
+       </div>
+       
+   </div>
+       
+    
+   <div className={classes.bar2}>
+      <Bar 
+        data={{
+
+          labels: ['Formateurs', 'Centres de formations' , 'Admin'],
+          datasets: [
+   {
+     label: 'Formations',
+     backgroundColor: '#F5B7B1',
+   
+     borderColor:  '#F5B7B1',
+     borderWidth: 2,
+     data: [Trainingsformer,Trainingscenter, Admin]
    }
- ]}}
-          options={{
-            title:{
-              display:true,
-              //text:'Average Rainfall per month',
-              fontSize:20
-            },
-            legend:{
-              display:true,
-              position:'right'
-            }
-          }}
-        />
+ ]
+
+        }}
+        options={{
+          title:{
+            display:true,
+            text:'Les formations ajoutées par',
+            fontSize:20
+          },
+         
+        }}
+      />
+        
     </div>
+
+
+
+  <div className={classes.bar2}>
+  <Bar 
+        data={{
+
+          labels: categories,
+          datasets: [
+   {
+     label: 'Formations',
+     backgroundColor: [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+     'rgba(255, 205, 86, 0.2)',
+     'rgba(75, 192, 192, 0.2)',
+     'rgba(255, 205, 86, 0.2)',
+     'rgba(75, 192, 192, 0.2)',
+     'rgba(54, 162, 235, 0.2)',
+   ],
+   borderColor: [
+     'rgb(255, 99, 132)',
+     'rgb(255, 159, 64)',
+     'rgb(255, 205, 86)',
+     'rgb(255, 159, 64)',
+     'rgb(255, 205, 86)',
+     'rgb(75, 192, 192)',
+   ],
+   borderWidth: 1,
+     data:nbre
+   }
+ ]
+
+        }}
+        options={{
+          title:{
+            display:true,
+            text:'Les formations par catégories',
+            fontSize:20
+          },
+         
+        }}
+      />
+
+  </div>
+
+ 
+<div className={classes.bar2}>
+<Line
+       
+       data={{
+
+          labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+          "Juillet", "Août ", "Septembre", "Octobre", "Novembre", "Décembre"
+        ],
+          datasets: [
+   {
+     label: 'Formations',
+     backgroundColor: [
+      'rgba(153, 102, 255, 0.2)',
+   ],
+   borderColor: [
+    'rgb(153, 102, 255)',
+   ],
+   borderWidth: 1,
+     data:mois
+   }
+ ]
+
+        }}
+        options={{
+          title:{
+            display:true,
+            text:'Les formations ajoutées par mois',
+            fontSize:20
+          },
+         
+        }}
+      /> 
 </div>
+
+
 </div>
   );
 };

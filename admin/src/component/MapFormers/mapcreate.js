@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-geosearch/dist/geosearch.css";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import icon1 from "../Pictures/place.svg";
-import L, { popup } from "leaflet";
+import L from "leaflet";
 
 // Cordinates of Marcillac
 var center = [36, 9.71117252370879];
@@ -18,7 +18,6 @@ var myIcon = L.icon({
 const MapWrapper = (props) => {
    function LeafletgeoSearch({ onGetLocation }) {
    const map = useMap();
-    const [name, setName] = useState("");
 
     useEffect(() => {
       const provider = new OpenStreetMapProvider();
@@ -41,10 +40,10 @@ const MapWrapper = (props) => {
         },
       });
       map.addControl(searchControl);
-      const handleDragEnd = (e) => {
+     /*  const handleDragEnd = (e) => {
         const { lat, lng } = e.target.getLatLng();
         console.log(`Lat: ${lat}, Lon: ${lng}`);
-      };
+      }; */
       // map.on("zoom", function (e) {
       //   handleRegion();
       // });
@@ -58,8 +57,8 @@ const MapWrapper = (props) => {
 
     return null;
   }
-  const [map, setMap] = useState(center, 8);
-  // if (props.x1 !== 10 && props.y1 !== 36) {
+/*   const [map, setMap] = useState(center, 8);
+ */  // if (props.x1 !== 10 && props.y1 !== 36) {
   //   map.flyTo([props.y1, props.x1], 12, {
   //     duration: 1,
   //   });

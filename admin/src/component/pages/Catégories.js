@@ -16,16 +16,17 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { getcategorie } from "../../actions/categorie";
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Recherche from '../Search/search';
 import {getSearchCategorie} from '../../actions/categorie';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddIcon from "@material-ui/icons/Add";
 import Modals from './AjouterCatégorie';
 import Modals1 from './updateCategorie';
+import useStyles1 from "./styles";
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -53,11 +54,12 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Nom' },
-  ,
+  { id: 'name', numeric: false, disablePadding: true, label: 'Nom' }
+  
 ];
 
 function EnhancedTableHead(props) {
+  const classes1 = useStyles1();
 
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -73,6 +75,8 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'selectionner tous les formateurs' }}
+            className={classes1.icon1}
+            color="default"  
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -117,25 +121,23 @@ const useToolbarStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
   highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: '#909497',
-          backgroundColor: 'ffffff',
-        }
-      : {
-          color:'#909497',
-          backgroundColor:'#909497',
-        },
-  title: {
-    flex: '1 1 100%',
-  },
+  theme.palette.type === "light"
+    ? {
+        color: "#56367a",
+      }
+    : {
+        color: "#ffffff",
+      },
+title: {
+  flex: "1 1 100%",
+},
 }));
 
 
 const  EnhancedTableToolbar = ({numSelected, categ}) => {
+  const classes1 = useStyles1();
 
   const classes = useToolbarStyles();
-  //const { numSelected } = numSelected;
     const history= useHistory();
     const dispatch = useDispatch();
 
@@ -168,10 +170,10 @@ const handleClose = () => {
       
 
       {numSelected > 0 ? (
-        <div>
+        <div className={classes1.divicons}>
  
         <Tooltip title="Modifier">
-          <IconButton aria-label="update" onClick={handleOpen}  >
+          <IconButton aria-label="update" className={classes1.icon} onClick={handleOpen}  >
         
             <EditIcon/>
 
@@ -274,8 +276,7 @@ let allcatégories= '';
     }
 
     setSelected(newSelected);
-    //console.log('one',newSelected);
-    //console.log(allcatégories);
+   
     localStorage.setItem('catégories', JSON.stringify({allcatégories }))
 
   };
@@ -320,18 +321,22 @@ let allcatégories= '';
   const handleClose1 = () => {
     setOpen1(false);
   }
+  const classes1 = useStyles1();
+
   return (
     <div className={classes.root}>
      <Recherche handlechangeRecherche={handlechangeRecherche}/>
 
       <Paper className={classes.paper}>
+      <IconButton onClick={handleOpen1}  >
+        <AddIcon   className={classes1.icon}/>
+        </IconButton>
+        <Modals  open={open1} handleClose={handleClose1} setOpen={setOpen1} />
         <EnhancedTableToolbar numSelected={selected.length} categ={selected}  />
         <TableContainer>
           <Table
             className={classes.table}
-            /* aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table" */
+          
           >
             <EnhancedTableHead
               classes={classes}
@@ -351,6 +356,7 @@ let allcatégories= '';
 
                   return (
                     <TableRow
+                    className={classes1.head}
                       hover
                       onClick={(event) => handleClick(event, row._id,row.nom)}
                       role="checkbox"
@@ -359,13 +365,15 @@ let allcatégories= '';
                       key={row._id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell padding="checkbox" className={classes1.cell}>
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
+                          className={classes1.icon1}
+                          color="default"
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell  className={classes1.cell} component="th" id={labelId}  padding="none">
                       {row.nom}
                       </TableCell>
                      
@@ -385,11 +393,10 @@ let allcatégories= '';
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Lignes par page"
+
         />
-        <IconButton onClick={handleOpen1}  >
-        <AddCircleIcon />
-        </IconButton>
-        <Modals  open={open1} handleClose={handleClose1} setOpen={setOpen1} />
+        
 
       </Paper>
      

@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Grid} from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import CloseIcon from "@material-ui/icons/Close";
 import useStyles from './styles';
-import Nerd from '../Pictures/Nerd.gif';
 import Building from '../Pictures/Building.gif';
 import Professor from '../Pictures/Professor.gif'
 const Modals = ({ handleClose, open, setOpen }) => {
@@ -27,7 +26,7 @@ const Modals = ({ handleClose, open, setOpen }) => {
             }}
         >
             <Fade in={open}>
-                <div className={classes.paper1}>
+                <div className={classes.paper2}>
                     <div className={classes.titleicon}>
                         <h3 className={classes.tantque}>Ajouter formation pour </h3>
                         <Button
@@ -41,13 +40,13 @@ const Modals = ({ handleClose, open, setOpen }) => {
                     </div>
                     <Grid container>
                     <Grid item xs={12} lg={4} sm={4} md={4}  className={classes.img1}>
-                            <img src={Professor} />
+                            <img alt="imgprof" src={Professor} />
                             <div >
                             <span className={classes.formateur}>  Formateur </span> </div>
                             <Button className={classes.btnf} href='/FormationFormateur' >Ajouter</Button>
                         </Grid>
                         <Grid item xs={12} lg={4} sm={4} md={4}>
-                            <img src={Building} className={classes.img2} />
+                            <img alt="img2" src={Building} className={classes.img2} />
                             <div className={classes.modalresponsive2}>
                             <span className={classes.centre}> Centre de formation </span></div>
                             <Button className={classes.btncf} href='/FormationCentre'>Ajouter</Button>

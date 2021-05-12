@@ -1,4 +1,4 @@
-export default (formations = [], action) => {
+const formation=  (formations = [], action) => {
     switch (action.type) {
       case 'FETCH_ALL':
         return action.payload;
@@ -13,3 +13,4 @@ export default (formations = [], action) => {
         return formations;
     }
   };
+  export default formation;

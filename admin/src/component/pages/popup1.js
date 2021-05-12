@@ -5,9 +5,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import CloseIcon from "@material-ui/icons/Close";
 import useStyles from './styles';
-import Building from '../Pictures/Building.gif';
-import Professor from '../Pictures/Professor.gif'
-const Popup = ({ handleClose, open, setOpen,Delete }) => {
+
+const Popup1 = ({ handleClose, open, setOpen,Delete }) => {
     const classes = useStyles();
 
 
@@ -27,7 +26,7 @@ const Popup = ({ handleClose, open, setOpen,Delete }) => {
         >
             <Fade in={open}>
                 <div className={classes.popup}>
-                    <h3 className={classes.supp}>Voulez vous vraiment supprimer cette formation  </h3>
+                    <h3 className={classes.supp}>Voulez vous vraiment supprimer ce formateur  </h3>
 
                     <div className={classes.titleicon}>
                         <Button
@@ -50,4 +49,4 @@ const Popup = ({ handleClose, open, setOpen,Delete }) => {
         </Modal>
     )
 }
-export default Popup;
+export default Popup1;

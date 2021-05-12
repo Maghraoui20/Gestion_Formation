@@ -1,5 +1,5 @@
 import React, { useState,useEffect} from 'react'
-import { Button, Paper, Grid, Typography, TextField } from '@material-ui/core';
+import { Button, Paper, Grid, TextField } from '@material-ui/core';
 import useStyles from './styles';
 import Input from '../authentification/inputuser';
 import { useHistory } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { signup } from '../../actions/authentification';
 import Img from '../Pictures/user.gif';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { ToastContainer, toast, zoom } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import Selectgouvernorat from '../Select/selectgouvernorat';
@@ -35,14 +35,14 @@ const Signup = () => {
     dispatch(getgouvernorat()).then((res) => {
       setGouvernorats(res);
     });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getCity()).then((res) => {
       setCity(res);
 
     });
-  }, []);
+  }, [dispatch]);
 
 
   const handleChangegouvernorat = (e, val) => {
@@ -93,26 +93,20 @@ const Signup = () => {
   return (
 
     <div >
-      <Paper className={classes.signupu} elevation={10} >
+      <Paper className={classes.paperajoutu} elevation={10} >
         <form onSubmit={handleSubmit}>
           <ToastContainer />
+          <h3 className={classes.compteformer}>Ajouter un client </h3>
+
           <Grid container >
             <Grid item lg={3} sm={3} md={3} xs={4}>
-            <Button className={classes.return} href="/signin" ><KeyboardBackspaceIcon className={classes.returnicon} /></Button>
-              <h3 className={classes.compte}>Créer un compte</h3>
-              <div className={classes.gr1}>
+            <Button className={classes.return} href="/clients" ><KeyboardBackspaceIcon className={classes.returnicon} /></Button>
+              <div className={classes.colf1}>
                 <Input  name="firstname" label="Nom" handleChange={handleChange} autoFocus />
                 <Input name="lastname" label="Prénom" handleChange={handleChange} />
-                <Selectgouvernorat onChangeGouvernorat={handleChangegouvernorat} value={signData.gouvernorate} gouvernorat={gouvernorat} />
-                <SelectCities handleChangecity={handleChangecity} value={signData.city} filtredCity={filtredCity} />         
-                     
-              </div>
-            </Grid>
-            <Grid item lg={4} sm={3} md={3} xs={4}>
-              <div className={classes.gr2} >
                 <Input  name="phone" label="Telephone" handleChange={handleChange} type="number" />
                 <Input  name="cin" label="Cin" handleChange={handleChange} type="number" />
-                <TextField name="email" label="Email" onChange={handleChange} variant="outlined" required type="email"  className={classes.email1}
+                <TextField name="email" label="Email" onChange={handleChange} variant="outlined" required type="email" className={classes.emailuser}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -120,17 +114,23 @@ const Signup = () => {
                       </InputAdornment>
                     ),
                   }}
-                />                 
+                />        
+              </div>
+            </Grid>
+            <Grid item lg={4} sm={3} md={3} xs={4}>
+              <div className={classes.colf2} >
+              <Selectgouvernorat onChangeGouvernorat={handleChangegouvernorat} value={signData.gouvernorate} gouvernorat={gouvernorat} />
+                <SelectCities handleChangecity={handleChangecity} value={signData.city} filtredCity={filtredCity} />         
                  <Input   name="password" label="Mot de passe" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
                 <Input   name="confirmerMotdepasse" label="Confimer  Mot de passe" handleChange={handleChange} type={showPassword1 ? 'text' : 'password'} handleShowPassword={handleShowPassword1} />
               </div>
             </Grid>
    
             <Grid item lg={5} sm={6} md={6} xs={4}>
-              <img src={Img} className={classes.imguser} />
+              <img src={Img} alt="imguser" className={classes.imguser} />
             </Grid>
           </Grid>
-          <Button type="submit" variant="contained" color="primary" className={classes.buttonuser}>
+          <Button type="submit" variant="contained" className={classes.enregistrer}>
             s'inscrire
                      </Button>
         </form>

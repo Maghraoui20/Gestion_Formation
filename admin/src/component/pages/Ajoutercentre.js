@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FileBase from 'react-file-base64';
 import useStyles from './styles';
-import { TextField, Button, FormLabel, Paper, Grid, Container, Typography } from '@material-ui/core';
+import { TextField, Button, Paper, Grid,  Typography } from '@material-ui/core';
 import Selectspecialty from '../Select/Selectspeciality';
 import Input from '../authentification/inputuser';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import { getgouvernorat } from '../../actions/gouvernorat';
 import Img2 from '../Pictures/centre.gif';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { ToastContainer, toast, zoom } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
@@ -50,7 +50,7 @@ const FormCentre = ({ currentId, setCurrentId }) => {
     dispatch(getcategorie()).then((res) => {
       setspeciality(res);
     });
-  }, []);
+  }, [dispatch]);
 
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const FormCentre = ({ currentId, setCurrentId }) => {
       setCity(res);
 
     });
-  }, []);
+  }, [dispatch]);
 
 
   const handleChangegouvernorat = (e, val) => {
@@ -95,7 +95,7 @@ const FormCentre = ({ currentId, setCurrentId }) => {
     dispatch(getgouvernorat()).then((res) => {
       setGouvernorats(res);
     });
-  }, []);
+  }, [dispatch]);
 
   const onChangeData2 = (e, val) => {
     let name = val.nom;
@@ -140,27 +140,19 @@ const FormCentre = ({ currentId, setCurrentId }) => {
     
   }
   return (
-    <Paper elevation={3} className={classes.papercentre}  >
+    <Paper elevation={3} className={classes.paperajoutc}  >
       <form onSubmit={handleSubmit} >
         <ToastContainer />
+        <h3 className={classes.compteformer}>Ajouter centre de formation</h3>
+
         <Grid container >
           <Grid item lg={3} sm={3} md={3} xs={4} >
-          <Button className={classes.return} href="/signin" ><KeyboardBackspaceIcon className={classes.returnicon} /></Button>
-          <h3 className={classes.comptecentre}>Ajouter centre de formation</h3>
-            <div className={classes.col1}>
-              <TextField required className={classes.textf} name='lastname' variant="outlined" label="nom " type="string" value={centreData.lastname} onChange={(e) => setcentreData({ ...centreData, lastname: e.target.value })} autoFocus></TextField>
-              <Selectspecialty onChangeData2={onChangeData2} value={centreData.namespeciality} speciality={speciality} />
-              <TextField required className={classes.textf} name='phone' variant="outlined" label="numéro de téléphone" type="number" value={centreData.phone} onChange={(e) => setcentreData({ ...centreData, phone: e.target.value })} ></TextField>
-              <Selectgouvernorat onChangeGouvernorat={handleChangegouvernorat} value={centreData.namegouvernorate} gouvernorat={gouvernorat} />
-              <SelectCities handleChangecity={handleChangecity} value={centreData.namecities} filtredCity={filtredCity} />
-              <TextField required className={classes.textf} name='adressexact' variant="outlined" label="Adresse exacte" type="string" value={centreData.adressexact} onChange={(e) => setcentreData({ ...centreData, adressexact: e.target.value })} ></TextField>
-
-            </div>
-          </Grid>
-          <Grid item lg={3} sm={3} md={3} xs={4} >
-            <div className={classes.col2}>
-            
-            <TextField name="email" label="Email" onChange={handleChangeemail} variant="outlined" required type="email"  className={classes.email1}
+          <Button className={classes.return} href="/centresdeformation" ><KeyboardBackspaceIcon className={classes.returnicon} /></Button>
+            <div className={classes.colf1}>
+              <TextField required className={classes.textformer}  name='lastname' variant="outlined" label="nom " type="string" value={centreData.lastname} onChange={(e) => setcentreData({ ...centreData, lastname: e.target.value })} autoFocus></TextField>
+              <TextField required className={classes.textformer}  name='phone' variant="outlined" label="numéro de téléphone" type="number" value={centreData.phone} onChange={(e) => setcentreData({ ...centreData, phone: e.target.value })} ></TextField>
+              
+              <TextField name="email" label="Email" onChange={handleChangeemail} variant="outlined" required type="email" className={classes.textformer} 
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -169,6 +161,18 @@ const FormCentre = ({ currentId, setCurrentId }) => {
                     ),
                   }}
                 />
+                <TextField required className={classes.textformer}  name='adressexact' variant="outlined" label="Adresse exacte" type="string" value={centreData.adressexact} onChange={(e) => setcentreData({ ...centreData, adressexact: e.target.value })} ></TextField>
+               <TextField required className={classes.textformer}  name='description' type="string" variant="outlined" label="Déscription" value={centreData.description} onChange={(e) => setcentreData({ ...centreData, description: e.target.value })} rows={5} cols={6} multiline  ></TextField>
+
+            </div>
+          </Grid>
+          <Grid item lg={3} sm={3} md={3} xs={4} >
+            <div className={classes.colf2}>
+            <Selectspecialty onChangeData2={onChangeData2} value={centreData.namespeciality} speciality={speciality} />
+
+            <Selectgouvernorat onChangeGouvernorat={handleChangegouvernorat} value={centreData.namegouvernorate} gouvernorat={gouvernorat} />
+              <SelectCities handleChangecity={handleChangecity} value={centreData.namecities} filtredCity={filtredCity} />
+    
             <Input className={classes.textf}  name="password" label="Mot de passe" handleChange={handleChangemotdepasse} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
             <Input  className={classes.textf} name="confirmerMotdepasse" label="Confimer  Mot de passe" handleChange={handleChangeconfirme}   type={showPassword1 ? 'text' : 'password'} handleShowPassword={handleShowPassword1}/>
            <div>
@@ -179,16 +183,15 @@ const FormCentre = ({ currentId, setCurrentId }) => {
             </div>
             </div>
             <FormHelperText className={classes.error} >{helperTextimg}</FormHelperText>
-            <TextField required name='description' type="string" variant="outlined" label="Déscription" value={centreData.description} onChange={(e) => setcentreData({ ...centreData, description: e.target.value })} rows={5} cols={6} multiline className={classes.textf} ></TextField>
 
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={4}>
-           <img src={Img2} className={classes.imgcentre}/>
+           <img src={Img2} alt="imgcenter" className={classes.imgformer}/>
           </Grid>
         </Grid>
 
-        <Button className={classes.btncentre} variant="outlined" color="primary" type="submit" > Ajouter</Button>
+        <Button className={classes.enregistrer} variant="outlined"  type="submit" > Ajouter</Button>
 
       </form>
     </Paper>

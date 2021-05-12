@@ -5,7 +5,7 @@ import Sidebar from "./component/Dashboard/Sidebar";
 import Signin from "./component/authentification/Signin";
 import Forgetpassword from "./component/authentification/forgetpass";
 import Resetpassword from "./component/authentification/resetpass";
-
+import Logout from './component/pages/Logout';
 import Statistique from "./component/pages/statistique";
 import Formations from "./component/pages/Formations";
 import UpdateTraining from "./component/pages/form";
@@ -31,9 +31,13 @@ const App = () => {
       <Switch>
         <Route path="/" exact component={Signin} />
         <Route path="/forget">
-          {" "}
-          <Forgetpassword />{" "}
+        
+          <Forgetpassword />
         </Route>
+        <Route path="/déconnexion">
+        
+        <Logout />
+      </Route>
         <Route
           path="/user/resetpassword/:token"
           exact

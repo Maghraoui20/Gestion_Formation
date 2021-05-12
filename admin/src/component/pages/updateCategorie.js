@@ -31,11 +31,11 @@ const handleSubmit=()=> {
             }}
         >
             <Fade in={open}>
-                <div className={classes.paper1}>
+                <div className={classes.papercateg}>
                     <div className={classes.titleicon}>
                         <h3 className={classes.tantque}>Modifier Catégorie </h3>
                         <Button
-                            className={classes.openicon}
+                            className={classes.openicon1}
                             onClick={() => {
                                 setOpen(!open);
                             }}
@@ -46,9 +46,9 @@ const handleSubmit=()=> {
                     <Grid container>
                       
                         <Grid item xs={12} lg={4} sm={4} md={4}>
-                            <TextField name="categ" label="nom catégorie" type="string" variant="outlined" value={CatégorieData.nom} onChange={(e)=> setCatégorieData({...CatégorieData, nom: e.target.value})} className={classes.phonenumber}> </TextField>
+                            <TextField name="categ" label="nom catégorie" type="string" variant="outlined" value={CatégorieData.nom} onChange={(e)=> setCatégorieData({...CatégorieData, nom: e.target.value})} className={classes.categtext}> </TextField>
 
-                            <Button className={classes.btncf} onClick={handleSubmit} >Modifier</Button>
+                            <Button className={classes.categajout} onClick={handleSubmit} >Modifier</Button>
                         </Grid>
                        
                     </Grid>

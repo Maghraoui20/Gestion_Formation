@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import {makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import useStyles1 from "./styles";
 
 import Paper from '@material-ui/core/Paper';
 
@@ -46,17 +46,14 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'firstname', numeric: false, disablePadding: true, label: 'Nom' },
-  { id: 'lastname', numeric: true, disablePadding: false, label: 'Prénom' },
-  { id: 'cin', numeric: true, disablePadding: false, label: 'Cin' },
+  { id: 'firstname', numeric: false, disablePadding: false, label: 'Nom' },
+  { id: 'lastname', numeric: false, disablePadding: true, label: 'Prénom' },
+  { id: 'name trainings', numeric: false, disablePadding: false, label: 'Nom de formation' },
 
-  { id: 'phone', numeric: true, disablePadding: false, label: 'Numéro de téléphone' },
-  { id: 'payement', numeric: true, disablePadding: false, label: 'Mode de payement' },
-  { id: 'name trainings', numeric: true, disablePadding: false, label: 'Nom de formation' },
-  
-
-  { id: 'firstdate', numeric: true, disablePadding: false, label: 'Date début' },
-  { id: 'lastdate', numeric: true, disablePadding: false, label: 'Date fin' },
+  { id: 'cin', numeric: false, disablePadding: true, label: 'Cin' },
+  { id: 'phone', numeric: false, disablePadding: true, label: 'Numéro de téléphone' },
+   { id: 'firstdate', numeric: false, disablePadding: true, label: 'Date début' },
+  { id: 'lastdate', numeric: false, disablePadding: true, label: 'Date fin' },
 
 ];
 
@@ -113,29 +110,23 @@ const useToolbarStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
   highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: '#909497',
-          backgroundColor: 'ffffff',
-        }
-      : {
-          color:'#909497',
-          backgroundColor:'#909497',
-        },
-  title: {
-    flex: '1 1 100%',
-  },
+  theme.palette.type === "light"
+    ? {
+        color: "#56367a",
+      }
+    : {
+        color: "#ffffff",
+      },
+title: {
+  flex: "1 1 100%",
+},
 }));
-
-
-
-
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '90%',
-    marginLeft:150,
+    width: '75%',
+    marginLeft:320,
   },
   paper: {
     width: '100%',
@@ -201,13 +192,13 @@ const [users,setusers] = useState();
  
 
 
-  const handleClick = (event, _id,firstname,lastname,phone,cin,selectedimage,email,gouvernorate,city) => {
+  const handleClick = (event, _id) => {
     const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 let allusers= '';
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected,_id);
-        allusers = newSelected.concat(selected,firstname,lastname,phone,cin,selectedimage,email,gouvernorate,city)
+        allusers = newSelected.concat(selected)
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -254,6 +245,7 @@ let allusers= '';
   }; 
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
+  const classes1 = useStyles1();
 
 
   return (
@@ -265,9 +257,7 @@ let allusers= '';
         <TableContainer>
           <Table
             className={classes.table}
-            /* aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table" */
+          
           >
             <EnhancedTableHead
               classes={classes}
@@ -289,8 +279,10 @@ let allusers= '';
 
                   return (
                     <TableRow
+                    className={classes1.head}
+
                       hover
-                      onClick={(event) => handleClick(event, row._id,row.firstname,row.lastname,row.gouvernorate,row.city,row.cin,row.selectedimage,row.email,row.phone)}
+                      onClick={(event) => handleClick(event, row._id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -298,27 +290,21 @@ let allusers= '';
                       selected={isItemSelected}
                     >
                      
-                      <TableCell align="right">{row.users.firstname}</TableCell>
-                      <TableCell align="right">{row.users.lastname}</TableCell>
-                      <TableCell align="right">{row.users.cin}</TableCell>
+                      <TableCell className={classes1.cell} >{row.users.firstname}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.users.lastname}</TableCell>
+                      <TableCell className={classes1.cell} >{row.trainings.name}</TableCell>
 
-                      <TableCell align="right">{row.phone}</TableCell>
-                      <TableCell align="right">{row.payement}</TableCell>
-                      <TableCell align="right">{row.trainings.name}</TableCell>
-                     
-                      <TableCell align="right">{ moment(row.trainings.firstdate).format("yyyy-MM-DD")}</TableCell>
-                      <TableCell align="right">{ moment(row.trainings.lastdate).format("yyyy-MM-DD")}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.users.cin}</TableCell>
+                      <TableCell className={classes1.cell} >{row.phone}</TableCell>
+                     <TableCell className={classes1.cell} padding="none">{ moment(row.trainings.firstdate).format("yyyy-MM-DD")}</TableCell>
+                      <TableCell className={classes1.cell} >{ moment(row.trainings.lastdate).format("yyyy-MM-DD")}</TableCell>
 
                      
 
                     </TableRow>
                   );
                 })}
-            {/*   {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
+          
             </TableBody>
           </Table>
         </TableContainer>
@@ -330,6 +316,8 @@ let allusers= '';
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Lignes par page"
+
         />
        
 

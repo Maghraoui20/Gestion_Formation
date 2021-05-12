@@ -134,7 +134,7 @@ const UpdateForm = () => {
     dispatch(getTrainingbyid(id)).then((res) => {
       setformationData(res);
     });
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     handleset();
   }, []);

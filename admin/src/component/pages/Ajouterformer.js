@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FileBase from 'react-file-base64';
 import useStyles from './styles';
-import { TextField, Button, FormLabel, Paper, Grid, Container, Typography } from '@material-ui/core';
+import { Avatar,TextField, Button, FormLabel, Paper, Grid,  Typography } from '@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -15,7 +15,7 @@ import Input from '../authentification/inputuser';
 import Img3 from '../Pictures/former.gif';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { ToastContainer, toast, zoom } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import "react-toastify/dist/ReactToastify.css";
 const Former = ({ currentId, setCurrentId }) => {
@@ -51,7 +51,7 @@ const Former = ({ currentId, setCurrentId }) => {
     dispatch(getcategorie()).then((res) => {
       setspeciality(res);
     });
-  }, []);
+  }, [dispatch]);
 
   const onChangeData2 = (e, value) => {
 if(value === null) {
@@ -133,34 +133,39 @@ if (extensionimg !== "/jpeg" || extensionimg !== "/jpg" || extensionimg !== "/pn
     }
   };
   return (
-    <Paper elevation={3} className={classes.paperformer}  >
+    <Paper elevation={3} className={classes.paperajout}  >
       <form onSubmit={handleSubmit} >
         <ToastContainer />
+        <h3 className={classes.compteformer}>Ajouter formateur</h3>
         <Grid container >
           <Grid item lg={3} sm={3} md={3} xs={4} >
           <Button className={classes.return} href="/formateurs" ><KeyboardBackspaceIcon className={classes.returnicon} /></Button>
-            <h3 className={classes.compteformer}>Ajouter formateur</h3>
+          
             <div className={classes.colf1}>
-              <TextField required className={classes.textf} name='firstname' variant="outlined" label="nom " type="string" value={formerData.firstname} onChange={(e) => setformerData({ ...formerData, firstname: e.target.value })} autoFocus ></TextField>
-              <TextField required className={classes.textf} name='lastname' variant="outlined" label="prénom" type="string" value={formerData.lastname} onChange={(e) => setformerData({ ...formerData, lastname: e.target.value })} ></TextField>
-              <Selectspecialty onChangeData2={onChangeData2} value={formerData.namespeciality} speciality={speciality} />
-              <TextField required className={classes.textf} name='phone' variant="outlined" label=" Telephone" type="number" value={formerData.phone} onChange={(e) => setformerData({ ...formerData, phone: e.target.value })} ></TextField>
-              <TextField required className={classes.textf} name='Numbreofexperience ' variant="outlined" label=" Année  d'expérience (ans)" type="number" value={formerData.Numbreofexperience} onChange={(e) => setformerData({ ...formerData, Numbreofexperience: e.target.value })} ></TextField>
-       
-              <TextField required name='description' type="string" variant="outlined" label="Déscription" value={formerData.description} onChange={(e) => setformerData({ ...formerData, description: e.target.value })} rows={5} cols={6} multiline className={classes.textf} ></TextField>
-             
+              <TextField required className={classes.textformer}  name='firstname' variant="outlined" label="nom " type="string" value={formerData.firstname} onChange={(e) => setformerData({ ...formerData, firstname: e.target.value })} autoFocus ></TextField>
+              <TextField required className={classes.textformer} name='lastname' variant="outlined" label="prénom" type="string" value={formerData.lastname} onChange={(e) => setformerData({ ...formerData, lastname: e.target.value })} ></TextField>
+              <TextField required className={classes.textformer}  name='phone' variant="outlined" label=" Telephone" type="number" value={formerData.phone} onChange={(e) => setformerData({ ...formerData, phone: e.target.value })} ></TextField>
+              <TextField required className={classes.textformer}  name='Numbreofexperience ' variant="outlined" label=" Année  d'expérience (ans)" type="number" value={formerData.Numbreofexperience} onChange={(e) => setformerData({ ...formerData, Numbreofexperience: e.target.value })} ></TextField>
+              <TextField required className={classes.textformer} name='cin' variant="outlined" label=" Carte d'intentité" type="String" value={formerData.cin} onChange={(e) => setformerData({ ...formerData, cin: e.target.value })} ></TextField>
+
+              <TextField className={classes.textformer} required name='description' type="string" variant="outlined" label="Déscription" value={formerData.description} onChange={(e) => setformerData({ ...formerData, description: e.target.value })} rows={5} cols={6} multiline  ></TextField>
+              <FormLabel className={classes.labelsex} component="legend">Sexe</FormLabel>
+              <RadioGroup aria-label="gender" name="gender1" value={formerData.gender} onChange={handleChange}>
+              <div className={classes.radio}>
+                  <FormControlLabel value="Femme" control={<Radio style={{ color: '#4e3e8c' }} />} label={<span className={classes.words} >Femme</span>} />
+                  <FormControlLabel value="Homme" control={<Radio style={{ color: '#4e3e8c' }} />} label={<span className={classes.words} >Homme</span>} />
+                </div>
+              </RadioGroup>
             </div>
           </Grid>
           <Grid item lg={3} sm={3} md={3} xs={4} >
             <div className={classes.colf2}>
-              <TextField required className={classes.textf2} name='cin' variant="outlined" label=" Carte d'intentité" type="String" value={formerData.cin} onChange={(e) => setformerData({ ...formerData, cin: e.target.value })} ></TextField>
+            <Selectspecialty onChangeData2={onChangeData2} value={formerData.namespeciality} speciality={speciality} />
 
-              <Typography className={classes.labela} >Ajouter un CV </Typography>
-              <div className={classes.filebase1}>
-                <FileBase type="file" name="choisir un CV" multiple={false} onDone={({ base64 }) => setformerData({ ...formerData, selectedFile: base64 })} />
-              </div>
+
+              
               <FormHelperText className={classes.error} >{helperText}</FormHelperText>
-              <TextField name="email" label="Email" onChange={handleChangeemail} variant="outlined" required type="email" className={classes.email1}
+              <TextField className={classes.email} name="email" label="Email" onChange={handleChangeemail} variant="outlined" required type="email" 
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -171,26 +176,26 @@ if (extensionimg !== "/jpeg" || extensionimg !== "/jpg" || extensionimg !== "/pn
               />
               <Input name="password" label="Mot de passe" handleChange={handleChangemotdepasse} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
               <Input name="confirmerMotdepasse" label="Confimer  Mot de passe" handleChange={handleChangeconfirme} type={showPassword1 ? 'text' : 'password'} handleShowPassword={handleShowPassword1} />
+              <Typography className={classes.labela} >Ajouter un CV </Typography>
+              <div className={classes.filebase1}>
+                <FileBase type="file" name="choisir un CV" multiple={false} onDone={({ base64 }) => setformerData({ ...formerData, selectedFile: base64 })} />
+              </div>
               <Typography className={classes.labela}  >Ajouter une image </Typography>
               <div className={classes.filebase1}>
                 <FileBase type="file" name="choisir une image" multiple={false} onDone={({ base64 }) => setformerData({ ...formerData, selectedimage: base64 })} />
+                <Avatar className={classes.avatar} alt="imageformer" src={formerData.selectedimage} ></Avatar>
+
               </div>
               <FormHelperText className={classes.error} >{helperTextimg}</FormHelperText>
        
-            <FormLabel className={classes.labels} component="legend">Sexe</FormLabel>
-              <RadioGroup aria-label="gender" name="gender1" value={formerData.gender} onChange={handleChange}>
-              <div className={classes.radio}>
-                  <FormControlLabel value="Femme" control={<Radio style={{ color: '#4e3e8c' }} />} label={<span className={classes.words} >Femme</span>} />
-                  <FormControlLabel value="Homme" control={<Radio style={{ color: '#4e3e8c' }} />} label={<span className={classes.words} >Homme</span>} />
-                </div>
-              </RadioGroup>
+           
               </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={4}>
-            <img src={Img3} className={classes.imgformer} />
+            <img src={Img3} alt="imgformer" className={classes.imgformer} />
           </Grid>
         </Grid>
-        <Button className={classes.btnformer} variant="outlined" color="primary" type="submit" > Ajouter</Button>
+        <Button className={classes.enregistrer} variant="outlined" type="submit" > Ajouter</Button>
       </form>
     </Paper >
 

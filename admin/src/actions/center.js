@@ -1,5 +1,4 @@
 import * as api from "../api/center";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export const getCentre =() => async (dispatch) => {
   

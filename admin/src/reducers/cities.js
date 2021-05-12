@@ -1,4 +1,4 @@
-export default (cities = [], action) => {
+const cities= (cities = [], action) => {
     switch (action.type) {
       case 'FETCH_ALL':
         return action.payload;
@@ -6,3 +6,4 @@ export default (cities = [], action) => {
         return cities;
     }
   };
+  export default cities;

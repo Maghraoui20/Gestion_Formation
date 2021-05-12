@@ -24,8 +24,9 @@ import { useHistory } from 'react-router-dom';
 import Recherche from '../Search/search';
 import {getSearchUser} from '../../actions/users';
 import {deleteUser} from '../../actions/users';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-
+import AddIcon from "@material-ui/icons/Add";
+import useStyles1 from "./styles";
+import Popup from './popup3';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -54,16 +55,17 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'firstname', numeric: false, disablePadding: true, label: 'Nom' },
-  { id: 'lastname', numeric: true, disablePadding: false, label: 'Prénom' },
-  { id: 'gouvernorate', numeric: true, disablePadding: false, label: 'Gouvernorat' },
-  { id: 'city', numeric: true, disablePadding: false, label: 'Ville' },
-  { id: 'cin', numeric: true, disablePadding: false, label: 'Cin' },
-  { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
+  { id: 'lastname', numeric: false, disablePadding: true, label: 'Prénom' },
+  { id: 'gouvernorate', numeric: false, disablePadding: true, label: 'Gouvernorat' },
+  { id: 'city', numeric: false, disablePadding: true, label: 'Ville' },
+  { id: 'cin', numeric: false, disablePadding: true, label: 'Cin' },
+  { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
 
-  { id: 'phone', numeric: true, disablePadding: false, label: 'Numéro de téléphone' },
+  { id: 'phone', numeric: false, disablePadding: true, label: 'Numéro de téléphone' },
 ];
 
 function EnhancedTableHead(props) {
+  const classes1 = useStyles1();
 
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -78,8 +80,8 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'selectionner tous les formateurs' }}
-          />
+            className={classes1.icon1}
+            color="default"           />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -123,37 +125,44 @@ const useToolbarStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
   highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: '#909497',
-          backgroundColor: 'ffffff',
-        }
-      : {
-          color:'#909497',
-          backgroundColor:'#909497',
-        },
-  title: {
-    flex: '1 1 100%',
-  },
+  theme.palette.type === "light"
+    ? {
+        color: "#56367a",
+      }
+    : {
+        color: "#ffffff",
+      },
 }));
 
 
 const  EnhancedTableToolbar = ({numSelected, User}) => {
+  const classes1 = useStyles1();
 
   const classes = useToolbarStyles();
   //const { numSelected } = numSelected;
     const history= useHistory();
     const dispatch = useDispatch();
+    const [isOpen, setIsOpen] = useState(false);
+    const Opening =()=>{
+     setIsOpen(true);
+   
+    }
+    const Closing =()=>{
+      setIsOpen(false);
+    
+     }
 const Delete =() => { dispatch(deleteUser(User))
 
-alert('Voulez vous vraiment supprimer ce formateur')
+alert('Voulez vous vraiment supprimer ce client');
+window.location.reload(false);
+
 };
   const Update = () => {
 
       history.push(`/userupdate/${User}`);
     };
 
- 
+
   return (
     
     <Toolbar
@@ -173,20 +182,25 @@ alert('Voulez vous vraiment supprimer ce formateur')
       
 
       {numSelected > 0 ? (
-        <div>
-  <Tooltip title="Supprimer">
-          <IconButton aria-label="delete" onClick={Delete }  >
-            <DeleteIcon />
-         
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Modifier">
-          <IconButton aria-label="update" onClick={Update}  >
-        
-            <EditIcon/>
-          </IconButton>
-        </Tooltip>
-        </div>
+        <div className={classes1.divicons2}>
+        <Tooltip title="Supprimer">
+                <IconButton aria-label="delete" onClick={Opening }  >
+                  <DeleteIcon className={classes1.icon} />
+               
+                </IconButton>
+              </Tooltip>
+              <Popup open={isOpen}
+                 handleClose={Closing}
+                 setOpen={setIsOpen} 
+                 Delete={Delete}
+                 />
+              <Tooltip title="Modifier">
+                <IconButton aria-label="update" className={classes1.icon} onClick={Update}  >
+              
+                  <EditIcon/>
+                </IconButton>
+              </Tooltip>
+              </div>
       
         
       ) : (
@@ -203,7 +217,7 @@ EnhancedTableToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '80%',
-    marginLeft:270,
+    marginLeft:300,
   },
   paper: {
     width: '100%',
@@ -226,6 +240,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable() {
+  const classes1 = useStyles1();
 
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
@@ -321,13 +336,14 @@ let allusers= '';
                   <Recherche handlechangeRecherche={handlechangeRecherche}/>
 
       <Paper className={classes.paper}>
+      <IconButton  href='/AjouterClient'  >
+        <AddIcon className={classes1.icon} />
+        </IconButton>
         <EnhancedTableToolbar numSelected={selected.length} User={selected}  />
         <TableContainer>
           <Table
             className={classes.table}
-            /* aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table" */
+          
           >
             <EnhancedTableHead
               classes={classes}
@@ -347,6 +363,8 @@ let allusers= '';
 
                   return (
                     <TableRow
+                    className={classes1.head}
+
                       hover
                       onClick={(event) => handleClick(event, row._id,row.firstname,row.lastname,row.gouvernorate,row.city,row.cin,row.selectedimage,row.email,row.phone)}
                       role="checkbox"
@@ -355,31 +373,29 @@ let allusers= '';
                       key={row._id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell padding="checkbox" className={classes1.cell}>
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
+                          className={classes1.icon1}
+                          color="default"
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell component="th" id={labelId} className={classes1.cell}  padding="none">
                         {row.firstname}
                       </TableCell>
-                      <TableCell align="right">{row.lastname}</TableCell>
-                      <TableCell align="right">{row.gouvernorate}</TableCell>
-                      <TableCell align="right">{row.city}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.lastname}</TableCell>
+                      <TableCell className={classes1.cell} padding="none" >{row.gouvernorate}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.city}</TableCell>
 
-                      <TableCell align="right">{row.cin}</TableCell>
-                      <TableCell align="right">{row.email}</TableCell>
-                      <TableCell align="right">{row.phone}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.cin}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.email}</TableCell>
+                      <TableCell className={classes1.cell} padding="none">{row.phone}</TableCell>
 
                     </TableRow>
                   );
                 })}
-            {/*   {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
+           
             </TableBody>
           </Table>
         </TableContainer>
@@ -391,10 +407,10 @@ let allusers= '';
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Lignes par page"
+
         />
-        <IconButton  href='/AjouterClient'  >
-        <AddCircleIcon />
-        </IconButton>
+       
 
       </Paper>
      

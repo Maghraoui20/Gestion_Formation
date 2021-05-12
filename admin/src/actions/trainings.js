@@ -87,11 +87,10 @@ return data;
     }
     };
     
-    export const deleteTraining = (id) => async (dispatch,history) => {
+    export const deleteTraining = (id) => async (dispatch) => {
     try {
       await api.deleteTraining(id);
      dispatch({ type:'DELETE', payload: id });
-     history.push('/Formations');
 
     } catch (error) {
      console.log(error);
@@ -112,5 +111,29 @@ return data;
           dispatch({ type:'CREATE', payload: data})
       }catch (error){
           console.log(error);
+      }
+    };
+    export const getTrainingcateg = () => async (dispatch) =>{
+
+      try {
+
+        const {data} =  await api.fetchTrainingcateg();
+      dispatch ({ type: 'FETCH_ALL', payload: data }) ;
+      return data;
+    } catch (error) {
+     console.log('error action',error.message);
+    
+      }
+    };
+    export const getTrainingmonths  = () => async (dispatch) =>{
+
+      try {
+
+        const {data} =  await api.fetchTrainingmonths();
+      dispatch ({ type: 'FETCH_ALL', payload: data }) ;
+      return data;
+    } catch (error) {
+     console.log('error action',error.message);
+    
       }
     };

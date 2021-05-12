@@ -24,8 +24,9 @@ import { useHistory } from 'react-router-dom';
 import Recherche from '../Search/search';
 import {getSearchCenter} from '../../actions/center';
 import {deleteCenter} from '../../actions/center';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-
+import AddIcon from "@material-ui/icons/Add";
+import useStyles1 from "./styles";
+import Popup from './popup2';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -54,16 +55,17 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'firstname', numeric: false, disablePadding: true, label: 'Nom' },
-  { id: 'namespeciality', numeric: true, disablePadding: false, label: 'Spécialité' },
-  { id: 'namegouvernorate', numeric: true, disablePadding: false, label: 'Gouvernorat' },
+  { id: 'namespeciality', numeric: false, disablePadding: true, label: 'Spécialité' },
+  { id: 'namegouvernorate', numeric: false, disablePadding: true, label: 'Gouvernorat' },
 
-  { id: 'namecities', numeric: true, disablePadding: false, label: 'ville' },
-  { id: 'email', numeric: true, disablePadding: false, label: 'email' },
+  { id: 'namecities', numeric: false, disablePadding: true, label: 'ville' },
+  { id: 'email', numeric: false, disablePadding: true, label: 'email' },
 
-  { id: 'phone', numeric: true, disablePadding: false, label: 'numéro de téléphone' },
+  { id: 'phone', numeric: false, disablePadding: true, label: 'numéro de téléphone' },
 ];
 
 function EnhancedTableHead(props) {
+  const classes1 = useStyles1();
 
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -78,8 +80,8 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'selectionner tous les centres' }}
-          />
+            className={classes1.icon1}
+            color="default"          />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -123,31 +125,38 @@ const useToolbarStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
   highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: '#909497',
-          backgroundColor: 'ffffff',
-        }
-      : {
-          color:'#909497',
-          backgroundColor:'#909497',
-        },
-  title: {
-    flex: '1 1 100%',
-  },
+  theme.palette.type === "light"
+    ? {
+        color: "#56367a",
+      }
+    : {
+        color: "#ffffff",
+      },
+title: {
+  flex: "1 1 100%",
+},
 }));
 
 
 const  EnhancedTableToolbar = ({numSelected, Centre}) => {
+  const classes1 = useStyles1();
 
   const classes = useToolbarStyles();
-  //const { numSelected } = numSelected;
     const history= useHistory();
     const dispatch = useDispatch();
+    const [isOpen, setIsOpen] = useState(false);
+    const Opening =()=>{
+     setIsOpen(true);
+   
+    }
+    const Closing =()=>{
+      setIsOpen(false);
+    
+     }
 const Delete =() => { dispatch(deleteCenter(Centre))
+  alert('ce centre a été supprimé avec succès');
 
-if(alert('Voulez vous vraiment supprimer ce centre'))
-document.location.href("/Formateurs");
+  window.location.reload(false);
 };
   const Update = () => {
 
@@ -174,15 +183,20 @@ document.location.href("/Formateurs");
       
 
       {numSelected > 0 ? (
-        <div>
+        <div className={classes1.divicons}>
   <Tooltip title="Supprimer">
-          <IconButton aria-label="delete" onClick={Delete }  >
-            <DeleteIcon />
+          <IconButton aria-label="delete" onClick={Opening }  >
+            <DeleteIcon className={classes1.icon} />
          
           </IconButton>
         </Tooltip>
+        <Popup open={isOpen}
+           handleClose={Closing}
+           setOpen={setIsOpen} 
+           Delete={Delete}
+           />
         <Tooltip title="Modifier">
-          <IconButton aria-label="update" onClick={Update}  >
+          <IconButton aria-label="update" className={classes1.icon} onClick={Update}  >
         
             <EditIcon/>
           </IconButton>
@@ -204,10 +218,10 @@ EnhancedTableToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '80%',
-    marginLeft:270,
+    marginLeft:310,
   },
   paper: {
-    width: '100%',
+    width: '98%',
     marginBottom: theme.spacing(2),
   },
   table: {
@@ -296,7 +310,7 @@ let allcenter= '';
     setPage(0);
   };
 
- 
+
  
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
@@ -319,18 +333,21 @@ let allcenter= '';
   
    
   }; 
+  const classes1 = useStyles1();
+
   return (
     <div className={classes.root}>
             <Recherche handlechangeRecherche={handlechangeRecherche}/>
 
       <Paper className={classes.paper}>
+      <IconButton  href='/AjouterCentre'  >
+        <AddIcon  className={classes1.icon}/>
+        </IconButton>
         <EnhancedTableToolbar numSelected={selected.length} Centre={selected}  />
         <TableContainer>
           <Table
             className={classes.table}
-            /* aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table" */
+          
           >
             <EnhancedTableHead
               classes={classes}
@@ -349,7 +366,9 @@ let allcenter= '';
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
+                    <TableRow      
+                     className={classes1.head}
+
                       hover
                       onClick={(event) => handleClick(event, row._id,row.lastname,row.namespeciality,row.namegouvernorate,row.namecities,row.email,row.phone,row.selectedimage,row.description,row.adressexact)}
                       role="checkbox"
@@ -358,30 +377,28 @@ let allcenter= '';
                       key={row._id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell padding="checkbox" className={classes1.cell}>
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
+                          className={classes1.icon1}
+                          color="default"
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell component="th" id={labelId} className={classes1.cell} padding="none">
                         {row.lastname}
                       </TableCell>
-                      <TableCell align="right">{row.namespeciality}</TableCell>
-                      <TableCell align="right">{row.namegouvernorate}</TableCell>
-                      <TableCell align="right">{row.namecities}</TableCell>
+                      <TableCell  className={classes1.cell} padding="none">{row.namespeciality}</TableCell>
+                      <TableCell  className={classes1.cell} padding="none">{row.namegouvernorate}</TableCell>
+                      <TableCell  className={classes1.cell}padding="none">{row.namecities}</TableCell>
 
-                      <TableCell align="right">{row.email}</TableCell>
-                      <TableCell align="right">{row.phone}</TableCell>
+                      <TableCell  padding="none" className={classes1.cell}>{row.email}</TableCell>
+                      <TableCell  padding="none" className={classes1.cell}>{row.phone}</TableCell>
 
                     </TableRow>
                   );
                 })}
-            {/*   {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
+           
             </TableBody>
           </Table>
         </TableContainer>
@@ -393,10 +410,10 @@ let allcenter= '';
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Lignes par page"
+
         />
-        <IconButton  href='/AjouterCentre'  >
-        <AddCircleIcon />
-        </IconButton>
+       
 
       </Paper>
      

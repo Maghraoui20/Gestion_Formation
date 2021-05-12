@@ -9,6 +9,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { FaBuilding } from "react-icons/fa";
 import { ImStatsDots } from "react-icons/im";
 import {VscAccount} from "react-icons/vsc";
+import {AiOutlineLogout} from 'react-icons/ai';
 export const SidebarData = [
   {
     title: 'Gérer formations',
@@ -59,5 +60,10 @@ export const SidebarData = [
     title: 'Statistique',
     path: '/dash',
     icon: <ImStatsDots />
+  },
+  {
+    title: 'Déconnexion',
+    path: '/déconnexion',
+    icon: <AiOutlineLogout />
   },
 ];

@@ -165,15 +165,17 @@ const EnhancedTableToolbar = ({ numSelected, Trainings }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
- const Close =()=>{
-  setIsOpen(!isOpen);
+ const Opening =()=>{
+  setIsOpen(true);
 
  }
-  
+ const Closing =()=>{
+  setIsOpen(false);
+
+ }
   const Delete = () => {
 
-
-    dispatch(deleteTraining(Trainings, history));
+dispatch(deleteTraining(Trainings));
 
 window.location.reload(false);
 
@@ -221,20 +223,18 @@ window.location.reload(false);
         <div className={classes1.divicons}>
           
           <Tooltip title="Supprimer">
-            <IconButton aria-label="delete" onClick={Close}>
-            {isOpen && <Popup
-      content={<>
-        <b>Voulez Vous Vraiment Supprimer Cette Formation</b>
-        <Button className={classes.confirmer} onClick={Delete}>Supprimer </Button>
-        <Button className={classes.Annuller} onClick={Close} >Annuler</Button>
-      </>}
-      handleClose={Close}
-    />}
+            <IconButton aria-label="delete" onClick={Opening}>
+      
               <DeleteIcon className={classes1.icon} />
-              
             </IconButton>
             
           </Tooltip>
+          <Popup open={isOpen}
+           handleClose={Closing}
+           setOpen={setOpen} 
+           Delete={Delete}
+           />
+
           <Tooltip title="Modifier">
             <IconButton aria-label="update" onClick={Update}>
               <EditIcon className={classes1.icon} />
@@ -461,6 +461,7 @@ export default function EnhancedTable() {
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Lignes par page"
         />
       </Paper>
     </div>

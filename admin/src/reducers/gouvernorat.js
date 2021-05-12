@@ -1,4 +1,4 @@
-export default (gouvernorat = [], action) => {
+const gouvernorat = (gouvernorat = [], action) => {
     switch (action.type) {
       case 'FETCH_ALL':
         return action.payload;
@@ -6,3 +6,4 @@ export default (gouvernorat = [], action) => {
         return gouvernorat;
     }
   };
+  export default gouvernorat;

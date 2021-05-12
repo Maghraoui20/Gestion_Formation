@@ -1,6 +1,6 @@
- import React, { useState, useEffect } from 'react';
+ import React, { useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Avatar, Button, Paper, Grid, TextField, FormLabel, Typography } from '@material-ui/core';
+import {  Button, Paper, Grid, TextField,  Typography } from '@material-ui/core';
 import Input from '../authentification/inputs';
 import useStyles from './styles';
 import { useDispatch } from 'react-redux';
@@ -66,23 +66,25 @@ const Profiladmin = () => {
                 alignItems="center"
                 justify="center"
             >
-                <Paper className={classes.paper1} elevation={4}>
+                <Paper className={classes.paperadmin} elevation={4}>
                     <form onSubmit={handleSubmit} >
                         <Grid>
-                            <Typography>INFORMATIONS GENERALES</Typography>
+                            <Typography className={classes.infogeneadmin}>INFORMATIONS GENERALES</Typography>
                            
                               
-                                 <div> 
-                                 <TextField name='email' variant="outlined" label="Email" value={userData.email} onChange={handlechangeemail} ></TextField>
- 
-                                 <Input name="mdpactuel" label="Mot de passe Actuel" handleChange={handleChangeactuel} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
+                                 <div > 
+                                 <TextField  className={classes.emailad} name='email' variant="outlined" label="Email" value={userData.email} onChange={handlechangeemail} ></TextField>
+ <div className={classes.pass1}>
+ <Input name="mdpactuel" label="Mot de passe Actuel" handleChange={handleChangeactuel} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
                                  <Input name="password" label="Mot de passe" handleChange={handleChangemdp} type={showPassword1 ? 'text' : 'password'} handleShowPassword={handleShowPassword1} />
                                  <Input name="confirmerMotdepasse" label="Confimer  Mot de passe" handleChange={handleChangeconfirm} type={showPassword2 ? 'text' : 'password'} handleShowPassword={handleShowPassword2} />
+ </div>
+                                 
                              </div>
                           
 
                         </Grid>
-                        <Button type="submit" variant="contained" color="primary"  onClick={() => setid(Data._id)} >Enregistrer</Button>
+                        <Button type="submit" variant="contained" className={classes.enregistrer} onClick={() => setid(Data._id)} >Enregistrer</Button>
                     </form>
                 </Paper>
             </Grid>

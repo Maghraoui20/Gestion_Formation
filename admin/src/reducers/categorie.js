@@ -1,4 +1,4 @@
-export default (categorie = [], action) => {
+const categorie=  (categorie = [], action) => {
     switch (action.type) {
       case 'FETCH_ALL':
         return action.payload;
@@ -12,3 +12,4 @@ export default (categorie = [], action) => {
         return categorie;
     }
   };
+  export default categorie;

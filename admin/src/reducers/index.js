@@ -7,5 +7,6 @@ import gouvernorat from './gouvernorat';
 import cities from './cities';
 import authification from './authentification';
 import favorite from './favorite';
-export default combineReducers({authification,formations,cities,gouvernorat,categorie,booking,favorite
+import opinions from './opinions';
+export default combineReducers({authification,formations,cities,gouvernorat,categorie,booking,favorite,opinions
 });

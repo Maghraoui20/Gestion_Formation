@@ -1,5 +1,4 @@
 import * as api from "../api/former";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export const getFormer =() => async (dispatch) => {
   
